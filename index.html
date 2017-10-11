@@ -10,124 +10,12 @@
     <!-- include cartodb.js library -->
     <link rel="stylesheet" href="cartodb.css">
     <script src="cartodb.js"></script>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style></style>
     <!-- This script makes it easy to use Stamen basemaps   -->
     <!-- script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script -->
     <style>
-        
-        
-        
-        .leaflet-sbs-range {
-    -webkit-appearance: none;
-    display: inline-block!important;
-    vertical-align: middle;
-    height: 50%;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background: rgba(0, 0, 0, 0);
-    min-width: 100px;
-    cursor: pointer;
-    pointer-events: none;
-    z-index: 999;
-}
-.leaflet-sbs-range::-ms-fill-upper {
-    background: transparent;
-}
-.leaflet-sbs-range::-ms-fill-lower {
-    background: transparent;
-}
-/* Browser thingies */
-
-.leaflet-sbs-range::-moz-range-track {
-    opacity: 0;
-}
-.leaflet-sbs-range::-ms-track {
-    opacity: 0;
-}
-.leaflet-sbs-range::-ms-tooltip {
-    display: none;
-}
-/* For whatever reason, these need to be defined
- * on their own so dont group them */
-.leaflet-sbs-range::-webkit-slider-thumb
-        {
-         margin: 0;
-    padding: 0;
-    background: #fff;
-    height: 4000px;
-    width: 10px;
-        top:0;
-            bottom:0;
-  
-    cursor: ew-resize;
-    pointer-events: auto;
-    border: 1px solid #ddd;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: 40px 40px;
-        
-        }
-        
-.leaflet-sbs-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-   
-}
-.leaflet-sbs-range::-ms-thumb {
-    margin: 0;
-    padding: 0;
-    background: #fff;
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    cursor: ew-resize;
-    pointer-events: auto;
-    border: 1px solid #ddd;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: 40px 40px;
-}
-.leaflet-sbs-range::-moz-range-thumb {
-    padding: 0;
-    right: 0    ;
-    background: #fff;
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    cursor: ew-resize;
-    pointer-events: auto;
-    border: 1px solid #ddd;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: 40px 40px;
-}
-.leaflet-sbs-range:disabled::-moz-range-thumb {
-    cursor: default;
-}
-.leaflet-sbs-range:disabled::-ms-thumb {
-    cursor: default;
-}
-.leaflet-sbs-range:disabled::-webkit-slider-thumb {
-    cursor: default;
-}
-.leaflet-sbs-range:disabled {
-    cursor: default;
-}
-.leaflet-sbs-range:focus {
-    outline: none!important;
-}
-.leaflet-sbs-range::-moz-focus-outer {
-    border: 0;
-}
-
         html,
         body,
         #map {
@@ -135,17 +23,17 @@
             padding: 0;
             margin: 0;
         }
-        
+
         #range {
             /*-webkit-appearance: none;*/
             appearance: none;
-            width:100%;
+            width: 100%;
             position: absolute;
-            top:0;
-            bottom:0;
-            z-index:30;
+            top: 0;
+            bottom: 0;
+            z-index: 30;
         }
-        
+
         .RB,
         .LB {
             display: inline-block;
@@ -155,33 +43,49 @@
             width: 2%;
             height: 1%;
         }
-        
+
         .LB {
             left: 1%;
             right: 90%;
         }
-        
+
         .RB {
             left: 90%;
             right: 1%;
         }
-        
+
         #btn {
             display: block;
         }
-        
-        .leaflet-sbs-divider{
-            z-index:999;
-            position:absolute;
+
+        #compBarHolder {
+
+            width: 100%;
 
         }
-        
+
+        .compBar {
+            z-index: 999;
+            position: absolute;
+            height: 100%;
+            width: 10px;
+            left: 50%;
+            background: #AAAABC;
+            background-image: url(thumb.svg);
+            
+        }
+
     </style>
 </head>
 
 <body>
-    <div class = "leaflet-sbs-divider"></div>
-    <input id='range' class="leaflet-sbs-range" type='range' min='0' max='1.0' step='any' />
+    <!--<div class = "leaflet-sbs-divider"></div>-->
+    <!--<div id="compareHolder"> -->
+    <div id="compBarHolder">
+        <div class="compBar" id="compareSlider"></div>
+    </div>
+
+
     <div class="RB">
         <button id="1960_0" class="btn_0">1960</button>
         <button id="1970_0" class="btn_0">1970</button>
@@ -190,7 +94,7 @@
         <button id="2000_0" class="btn_0"> 2000</button>
         <button id="2010_0" class="btn_0"> 2010</button>
     </div>
-    
+
     <div class="LB">
         <button id="1960_1" class="btn_1">1960</button>
         <button id="1970_1" class="btn_1">1970</button>
@@ -209,37 +113,34 @@
         var layerState = ["1960", "1970"];
         var sqlSources = {
             "1960": "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0", //END1960
-            
+
             "1970": "SELECT latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0", //END1970
-            
+
             "1980": "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0", //END1980
-            
+
             "1990": "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, anpsadpi FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li.gisjoin", //END1990
-            
+
             "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin", //END2000
-            
+
             "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin" //END2010
         };
         CartoLayerSource = {
-            user_name: "latinos"
-            , api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced"
-            , type: 'cartodb'
-            , maps_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
-            , sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
-            , sublayers: [
-                {
-                    //sql: "SELECT * FROM latinos.tract_1960",
-                    sql: "", //cartocss: '#layer { polygon-fill: #045275; polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
-                    //cartocss: '#layer { polygon-fill: ramp([pct_hispanic], colorbrewer(BuPu), quantiles(5)); polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
-                    cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }'
-                    , interactivity: "cartodb_id"
-            }
-                    , {
-                    type: "http"
-                    , urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
-                    , subdomains: ["a", "b", "c"]
-            }
-            , ]
+            user_name: "latinos",
+            api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced",
+            type: 'cartodb',
+            maps_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}",
+            sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}",
+            sublayers: [{
+                //sql: "SELECT * FROM latinos.tract_1960",
+                sql: "", //cartocss: '#layer { polygon-fill: #045275; polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
+                //cartocss: '#layer { polygon-fill: ramp([pct_hispanic], colorbrewer(BuPu), quantiles(5)); polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
+                cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }',
+                interactivity: "cartodb_id"
+            }, {
+                type: "http",
+                urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                subdomains: ["a", "b", "c"]
+            }, ]
         };
 
         function makeCLSource(year) { //
@@ -248,34 +149,27 @@
             return cartoClone;
         };
         var legend = new cdb.geo.ui.Legend({
-            type: "custom"
-            , title: "Percent of Latino Population"
-            , data: [
-                {
-                    name: "80% or more"
-                    , value: "#810f7c"
-                }
-                , {
-                    name: "40% - 80%"
-                    , value: "#8856a7"
-                }
-                , {
-                    name: "20% - 40%"
-                    , value: "#8c96c6"
-                }
-                , {
-                    name: "10% - 20%"
-                    , value: "#9ebcda"
-                }
-                , {
-                    name: " 5% - 10%"
-                    , value: "#bfd3e6"
-                }
-                , {
-                    name: "5% or less"
-                    , value: "#edf8fb"
-                }
-            ]
+            type: "custom",
+            title: "Percent of Latino Population",
+            data: [{
+                name: "80% or more",
+                value: "#810f7c"
+            }, {
+                name: "40% - 80%",
+                value: "#8856a7"
+            }, {
+                name: "20% - 40%",
+                value: "#8c96c6"
+            }, {
+                name: "10% - 20%",
+                value: "#9ebcda"
+            }, {
+                name: " 5% - 10%",
+                value: "#bfd3e6"
+            }, {
+                name: "5% or less",
+                value: "#edf8fb"
+            }]
         });
         //        function showMap(indexSource, indexLayer) {
         //            var cartoLayerSource = makeCLSource(indexSource); //1
@@ -286,46 +180,48 @@
             var mapChange = evt.target.id.toString();
             var [year, layer] = mapChange.split("_")
             console.log(year, layer)
-            changeYear(year,layer)
-            window.setTimeout(clip,100);
+            changeYear(year, layer)
+            window.setTimeout(clip, 100);
         }
-        function changeYear(year,layer){
-               layerState[layer] = year;
-            loadLayers(layerState)  
+
+        function changeYear(year, layer) {
+            layerState[layer] = year;
+            loadLayers(layerState)
             setButtons()
-            
-           window.setTimeout(clip,100);
-          //  $("input[type=range]").val($("input[type=range]").val()+.01);
+
+            window.setTimeout(clip, 100);
+            //  $("input[type=range]").val($("input[type=range]").val()+.01);
         }
-        function setButtons(){
-            
-               $('.btn_1,.btn_0').prop("disabled",false).removeAttr('style');
-            $('#'+layerState[0]+"_1").prop("disabled",true);
-             $('#'+layerState[0]+"_0").css("background-color","green");
-            $('#'+layerState[1]+"_0").prop("disabled",true);
-             $('#'+layerState[1]+"_1").css("background-color","green");
-            
+
+        function setButtons() {
+
+            $('.btn_1,.btn_0').prop("disabled", false).removeAttr('style');
+            $('#' + layerState[0] + "_1").prop("disabled", true);
+            $('#' + layerState[0] + "_0").css("background-color", "green");
+            $('#' + layerState[1] + "_0").prop("disabled", true);
+            $('#' + layerState[1] + "_1").css("background-color", "green");
+
         }
-        
+
         function loadLayers(state) {
-            
+
             clearLayers();
-            retrieveLayer(map, makeCLSource(state[0]), 0).then(function(){
-                 retrieveLayer(map, makeCLSource(state[1]), 1).then(function(){
-          for(i in layers){
-              layers[i].addTo(map)
-              
-          }
+            retrieveLayer(map, makeCLSource(state[0]), 0).then(function() {
+                retrieveLayer(map, makeCLSource(state[1]), 1).then(function() {
+                    for (i in layers) {
+                        layers[i].addTo(map)
+
+                    }
+                })
+
             })
-              
-            })
-             $("input[type=range]").val($("input[type=range]").val()+.01); 
-                // layer.removeLayer(
+            $("#compareSlider").val($("#compareSlider").val() + .01);
+            // layer.removeLayer(
         }
 
         function clearLayers() {
             var index = 0;
-            map.eachLayer(function (layer) {
+            map.eachLayer(function(layer) {
                 if (index != 0) {
                     map.removeLayer(layer);
                 }
@@ -333,7 +229,43 @@
             });
         }
 
+        function getSliderValue() {
+
+            var mapWidth = $('#map').css("width");
+            var sliderBarWidth = $('#compareSlider').css("width");
+            var sliderBarPosX = $('#compareSlider').css("left");
+            mapWidth = mapWidth.substr(0, mapWidth.length - 2);
+            sliderBarWidth = sliderBarWidth.substr(0, sliderBarWidth.length - 2);
+            sliderBarPosX = sliderBarPosX.substr(0, sliderBarPosX.length - 2);
+            //console.log(mapWidth +"<- mapwidth | "+ sliderBarWidth+"<-  sliderBarWidth |"+ sliderBarPosX +"<- sliderBarPosX");
+            mapWidth = parseInt(mapWidth);
+            sliderBarWidth = parseInt(sliderBarWidth);
+            sliderBarPosX = parseInt(sliderBarPosX);
+            var barWidthp = sliderBarWidth / mapWidth;
+            var sliderBarPosXp = sliderBarPosX / mapWidth;
+            return (barWidthp + sliderBarPosXp);
+            // var consoleLogadd = JSON.stringify(barWidthp+sliderBarPosXp);
+            //console.log(consoleLogadd);
+
+
+
+        }
+
         function main() {
+            $("#compareSlider").draggable({
+                axis: 'x',
+                containment: "parent",
+                start: function() {
+                    clip()
+                },
+                drag: function() {
+                    clip()
+                },
+                stop: function() {
+                    clip()
+                }
+            });
+
             $('.btn_1,.btn_0 ').on("click", changeMap);
             map = L.map('map').setView([40.85, -73.03], 10);
             L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
@@ -342,85 +274,80 @@
             //showMap(1, 1);
             //var cartoLayerSource = makeCLSource(1); //1
             // retrieveLayer(map, cartoLayerSource,0);
-            
-            range['oninput'] = clip;
+
+            //range['oninput'] = clip;
             map.on('move', clip);
             loadLayers(layerState)
-              // $("input[type=range]").val(1);
-            window.setTimeout(clip,100);
+            // $("input[type=range]").val(1);
+            window.setTimeout(clip, 100);
             setButtons()
-            
-            
-            
+
+
+
         }
-        
+
         function retrieveLayer(map, cartoLayerSource, layerIndex) {
-            return new Promise(function (resolve, reject) {
-                 cartodb.createLayer(map, cartoLayerSource).on('done', function (layer) {
+            return new Promise(function(resolve, reject) {
+                cartodb.createLayer(map, cartoLayerSource).on('done', function(layer) {
                     layers[layerIndex] = layer;
                     resolve("loaded")
-                  
+
                 })
             })
-            window.setTimeout(clip,100);
+            window.setTimeout(clip, 100);
         }
 
         function clip() {
-        
+
             //console.log(layers[0].layers[0].options.sql)
             //console.log(layers[1].layers[0].options.sql)
-            var nw = map.containerPointToLayerPoint([0, 0])
-                , se = map.containerPointToLayerPoint(map.getSize())
-                , clipX = nw.x + (se.x - nw.x) * range.value;
-          
+            var nw = map.containerPointToLayerPoint([0, 0]),
+                se = map.containerPointToLayerPoint(map.getSize()),
+                clipX = nw.x + (se.x - nw.x) * getSliderValue();
+
             layers[1].getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
             layers[1].getContainer().style.border = 'rgb(175, 135, 244)';
             var thumbPos = $(".leaflet-sbs-range")
             console.log(thumbPos);
             //$(".leaflet-sbs-divider").css("left",clipX+"px");
-           $(".leaflet-sbs-divider").css("left",thumbPos);
+            $(".leaflet-sbs-divider").css("left", thumbPos);
 
-          
-     
-         map.invalidateSize(true)
-//            
-          
+
+
+            map.invalidateSize(true)
+            //            
+
 
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//         function clip() {
-//            //console.log(layers[0].layers[0].options.sql)
-//            //console.log(layers[1].layers[0].options.sql)
-//            var mapSize=map.containerPointToLayerPoint(map.getSize())
-//            var rect= "rect("+[range.value*mapSize.x,mapSize.y,mapSize.x,mapSize.y].join('px,') + 'px)'; 
-//    console.log(rect)
-//            if(layers[1].getContainer()){
-//                console.log(layers[0].getContainer().style);
-//                
-//                
-//                layers[0].getContainer().style.clip=rect;}
-//             //' + 
-//           // layers[1].getContainer().style.clip = '
-//             
-//                    }
-        
-        
+
+
+
+
+
+
+
+
+
+        //         function clip() {
+        //            //console.log(layers[0].layers[0].options.sql)
+        //            //console.log(layers[1].layers[0].options.sql)
+        //            var mapSize=map.containerPointToLayerPoint(map.getSize())
+        //            var rect= "rect("+[range.value*mapSize.x,mapSize.y,mapSize.x,mapSize.y].join('px,') + 'px)'; 
+        //    console.log(rect)
+        //            if(layers[1].getContainer()){
+        //                console.log(layers[0].getContainer().style);
+        //                
+        //                
+        //                layers[0].getContainer().style.clip=rect;}
+        //             //' + 
+        //           // layers[1].getContainer().style.clip = '
+        //             
+        //                    }
+
+
         // load main() function
         window.onload = main;
+
     </script>
 </body>
 
