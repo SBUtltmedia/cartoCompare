@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Latino Population (1960)</title>
+    <title>Latinos of LI | NY </title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico">
     <!-- include cartodb.js library -->
@@ -72,9 +72,8 @@
             left: 50%;
             background: #AAAABC;
             background-image: url(thumb.svg);
-            
-        }
 
+        }
     </style>
 </head>
 
@@ -118,12 +117,20 @@
 
             "1980": "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0", //END1980
 
-            "1990": "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, anpsadpi FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li.gisjoin", //END1990
+            "1990": "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, anpsadpi FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0", //END1990
 
-            "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin", //END2000
+            "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0", //END2000
 
-            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin" //END2010
+            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as name FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin WHERE UO7E001!=0 AND UO7E002*1.0>=0" //END2010
         };
+
+        var PntSrc = {
+            "1960": "SELECT * FROM latinos.comparisonmappoints where decade='1960'",
+            "1970": "SELECT * FROM latinos.comparisonmappoints where decade='1970'",
+            "1980": "SELECT * FROM latinos.comparisonmappoints where decade='1980'"
+        }
+
+
         CartoLayerSource = {
             user_name: "latinos",
             api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced",
@@ -131,23 +138,31 @@
             maps_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}",
             sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}",
             sublayers: [{
-                //sql: "SELECT * FROM latinos.tract_1960",
-                sql: "", //cartocss: '#layer { polygon-fill: #045275; polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
-                //cartocss: '#layer { polygon-fill: ramp([pct_hispanic], colorbrewer(BuPu), quantiles(5)); polygon-opacity: 1; } #layer::outline { line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; }'
-                cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }',
-                interactivity: "cartodb_id"
-            }, {
-                type: "http",
-                urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
-                subdomains: ["a", "b", "c"]
-            }, ]
+                    //sql: "SELECT * FROM latinos.tract_1960",
+                    sql: "", 
+                    cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }',
+                    interactivity: "cartodb_id"
+                },
+                {
+                    sql: "",
+                    cartocss: "#Points { marker-width: 14; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
+                    interactivity: "cartodb_id"
+                },{
+                    type: "http",
+                    urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                    subdomains: ["a", "b", "c"]
+                },
+            ]
         };
 
         function makeCLSource(year) { //
             var cartoClone = JSON.parse(JSON.stringify(CartoLayerSource));
             cartoClone.sublayers[0].sql = sqlSources[year];
+            cartoClone.sublayers[1].sql = PntSrc[year];
             return cartoClone;
+            //console.log(cartoClone.sublayers[1])
         };
+
         var legend = new cdb.geo.ui.Legend({
             type: "custom",
             title: "Percent of Latino Population",
@@ -179,7 +194,7 @@
             //console.log(evt.target.id)
             var mapChange = evt.target.id.toString();
             var [year, layer] = mapChange.split("_")
-            console.log(year, layer)
+            //console.log(year, layer)
             changeYear(year, layer)
             window.setTimeout(clip, 100);
         }
@@ -304,11 +319,11 @@
             var nw = map.containerPointToLayerPoint([0, 0]),
                 se = map.containerPointToLayerPoint(map.getSize()),
                 clipX = nw.x + (se.x - nw.x) * getSliderValue();
-
+            console.log(layers[1].getContainer())
             layers[1].getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
             layers[1].getContainer().style.border = 'rgb(175, 135, 244)';
             var thumbPos = $(".leaflet-sbs-range")
-            console.log(thumbPos);
+            //console.log(thumbPos);
             //$(".leaflet-sbs-divider").css("left",clipX+"px");
             $(".leaflet-sbs-divider").css("left", thumbPos);
 
@@ -347,7 +362,6 @@
 
         // load main() function
         window.onload = main;
-
     </script>
 </body>
 
