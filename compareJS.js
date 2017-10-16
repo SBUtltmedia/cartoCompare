@@ -189,10 +189,13 @@
             // $("input[type=range]").val(1);
             window.setTimeout(clip, 100);
             setButtons()
-            var gproxySrc = '2PACX-1vS5reLPK6XbxdRbrxKEgvM2a-aBRKh8qbVt9ej4HEv_Orw59ICfRThDCIoO7SZdFLTPZA1j1jlE4U7O/pub?';
+            var gproxySrc = '2PACX-1vS5reLPK6XbxdRbrxKEgvM2a-aBRKh8qbVt9ej4HEv_Orw59ICfRThDCIoO7SZdFLTPZA1j1jlE4U7O';
+            var urlSrc = "/gproxy/?id="+gproxySrc+"&gid=0";
+            console.log(urlSrc)
             $.ajax({
-            url: "/gproxy/?id="+gproxySrc+"gid=0"
+            url:urlSrc
         }).done(function (data) {
+            
             var sched = $.csv.toArrays(data);
             console.log(sched);
         });
@@ -247,28 +250,9 @@
         //             
         //                    }
 
-
-        // load main() function
-        
-        
-        
         /**  
         
         Getting Videos to Work
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         **/
-        
-        
-        
-        
-        
-        
         window.onload = main;
