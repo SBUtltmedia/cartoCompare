@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Latinos of LI | NY </title>
+    <title>Latinos of LI &amp; NY </title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico">
     <!-- include cartodb.js library -->
@@ -12,78 +12,17 @@
     <script src="cartodb.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <style></style>
-    <!-- This script makes it easy to use Stamen basemaps   -->
-    <!-- script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script -->
-    <style>
-        html,
-        body,
-        #map {
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        #range {
-            /*-webkit-appearance: none;*/
-            appearance: none;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            z-index: 30;
-        }
-
-        .RB,
-        .LB {
-            display: inline-block;
-            position: absolute;
-            z-index: 100;
-            top: 50%;
-            width: 2%;
-            height: 1%;
-        }
-
-        .LB {
-            left: 1%;
-            right: 90%;
-        }
-
-        .RB {
-            left: 90%;
-            right: 1%;
-        }
-
-        #btn {
-            display: block;
-        }
-
-        #compBarHolder {
-
-            width: 100%;
-
-        }
-
-        .compBar {
-            z-index: 999;
-            position: absolute;
-            height: 100%;
-            width: 10px;
-            left: 50%;
-            background: #AAAABC;
-            background-image: url(thumb.svg);
-
-        }
-    </style>
+    <!-- link below is the style for the webpage-->
+    <link href = 'compareStyle.css' rel='stylesheet' type='text/css'>
+    <script src="/jquery.csv.js"></script>
+    <!-- This script makes it easy to use Stamen basemaps   
+    script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script -->
 </head>
 
 <body>
-    <!--<div class = "leaflet-sbs-divider"></div>-->
-    <!--<div id="compareHolder"> -->
     <div id="compBarHolder">
         <div class="compBar" id="compareSlider"></div>
     </div>
-
 
     <div class="RB">
         <button id="1960_0" class="btn_0">1960</button>
@@ -121,7 +60,7 @@
 
             "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0", //END2000
 
-            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as name FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin WHERE UO7E001!=0 AND UO7E002*1.0>=0" //END2010
+            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as name FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin WHERE UO7E001!=0 AND (UO7E002*1.0)>=0" //END2010
         };
 
         var PntSrc = {
@@ -205,7 +144,7 @@
             setButtons()
 
             window.setTimeout(clip, 100);
-            //  $("input[type=range]").val($("input[type=range]").val()+.01);
+              $("input[type=range]").val($("input[type=range]").val()+.01);
         }
 
         function setButtons() {
@@ -296,14 +235,20 @@
             // $("input[type=range]").val(1);
             window.setTimeout(clip, 100);
             setButtons()
-
-
+            var gproxySrc = '2PACX-1vS5reLPK6XbxdRbrxKEgvM2a-aBRKh8qbVt9ej4HEv_Orw59ICfRThDCIoO7SZdFLTPZA1j1jlE4U7O/pub?';
+            $.ajax({
+            url: "/gproxy/?id="+gproxySrc+"gid=0"
+        }).done(function (data) {
+            var sched = $.csv.toArrays(data);
+            console.log(sched);
+        });
 
         }
 
         function retrieveLayer(map, cartoLayerSource, layerIndex) {
             return new Promise(function(resolve, reject) {
                 cartodb.createLayer(map, cartoLayerSource).on('done', function(layer) {
+                    console.log(layer)
                     layers[layerIndex] = layer;
                     resolve("loaded")
 
@@ -330,19 +275,8 @@
 
 
             map.invalidateSize(true)
-            //            
-
-
+            //       
         }
-
-
-
-
-
-
-
-
-
         //         function clip() {
         //            //console.log(layers[0].layers[0].options.sql)
         //            //console.log(layers[1].layers[0].options.sql)
@@ -361,6 +295,28 @@
 
 
         // load main() function
+        
+        
+        
+        /**  
+        
+        Getting Videos to Work
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        **/
+        
+        
+        
+        
+        
+        
         window.onload = main;
     </script>
 </body>
