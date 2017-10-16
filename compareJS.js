@@ -32,7 +32,7 @@
             sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}",
             sublayers: [{
                     //sql: "SELECT * FROM latinos.tract_1960",
-                    sql: "", 
+                    sql: "",
                     cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }',
                     interactivity: "cartodb_id"
                 },
@@ -81,7 +81,7 @@
         });
         //        function showMap(indexSource, indexLayer) {
         //            var cartoLayerSource = makeCLSource(indexSource); //1
-        //           
+        //
         //        }
         function changeMap(evt) {
             //console.log(evt.target.id)
@@ -195,7 +195,7 @@
             $.ajax({
             url:urlSrc
         }).done(function (data) {
-            
+
             var sched = $.csv.toArrays(data);
             console.log(sched);
         });
@@ -232,26 +232,26 @@
 
 
             map.invalidateSize(true)
-            //       
+            //
         }
         //         function clip() {
         //            //console.log(layers[0].layers[0].options.sql)
         //            //console.log(layers[1].layers[0].options.sql)
         //            var mapSize=map.containerPointToLayerPoint(map.getSize())
-        //            var rect= "rect("+[range.value*mapSize.x,mapSize.y,mapSize.x,mapSize.y].join('px,') + 'px)'; 
+        //            var rect= "rect("+[range.value*mapSize.x,mapSize.y,mapSize.x,mapSize.y].join('px,') + 'px)';
         //    console.log(rect)
         //            if(layers[1].getContainer()){
         //                console.log(layers[0].getContainer().style);
-        //                
-        //                
+        //
+        //
         //                layers[0].getContainer().style.clip=rect;}
-        //             //' + 
+        //             //' +
         //           // layers[1].getContainer().style.clip = '
-        //             
+        //
         //                    }
 
-        /**  
-        
+        /**
+
         Getting Videos to Work
 
         **/
