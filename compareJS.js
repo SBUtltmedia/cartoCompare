@@ -2,7 +2,7 @@
         var map;
         var overlay;
         var layers = [];
-        var layerState = ["1960", "1970"];
+        var layerState = ["2010", "1960"];
         var sqlSources = {
             "1960": "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0", //END1960
 
@@ -14,13 +14,16 @@
 
             "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0", //END2000
 
-            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, UO7E001 as total_pop, UO7E003 as hispanic, UO7E002 as non_hispanic, round(UO7E002 *1.0 / UO7E001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as name FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li.gisjoin WHERE UO7E001!=0 AND (UO7E002*1.0)>=0" //END2010
+            "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0" //END2010
         };
 
         var PntSrc = {
             "1960": "SELECT * FROM latinos.comparisonmappoints where decade='1960'",
             "1970": "SELECT * FROM latinos.comparisonmappoints where decade='1970'",
-            "1980": "SELECT * FROM latinos.comparisonmappoints where decade='1980'"
+            "1980": "SELECT * FROM latinos.comparisonmappoints where decade='1980'",
+            "1990": "SELECT * FROM latinos.comparisonmappoints where decade='1990'",
+            "2000": "SELECT * FROM latinos.comparisonmappoints where decade='2000'",
+            "2010": "SELECT * FROM latinos.comparisonmappoints where decade='2010'"
         }
 
 
@@ -123,7 +126,7 @@
                 })
 
             })
-            $("#compareSlider").val($("#compareSlider").val() + .01);
+            $("#compareSlider").val($("#compareSlider").val() + .1);
             // layer.removeLayer(
         }
 
@@ -175,7 +178,7 @@
             });
 
             $('.btn_1,.btn_0 ').on("click", changeMap);
-            map = L.map('map').setView([40.85, -73.03], 10);
+            map = L.map('map').setView([40.85, -73.03], 9);
             L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
             //  showMap(2, 0);
             // showMap(0, 1);
@@ -207,6 +210,10 @@
                 cartodb.createLayer(map, cartoLayerSource).on('done', function(layer) {
                     console.log(layer)
                     layers[layerIndex] = layer;
+                    $('#map').append(legend.render().el);
+            
+                cartodb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
+                    $("#compareSlider").val($("#compareSlider").val() + .1);
                     resolve("loaded")
 
                 })
@@ -221,7 +228,7 @@
             var nw = map.containerPointToLayerPoint([0, 0]),
                 se = map.containerPointToLayerPoint(map.getSize()),
                 clipX = nw.x + (se.x - nw.x) * getSliderValue();
-            console.log(layers[1].getContainer())
+            //console.log(layers[1].getContainer())
             layers[1].getContainer().style.clip = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)';
             layers[1].getContainer().style.border = 'rgb(175, 135, 244)';
             var thumbPos = $(".leaflet-sbs-range")
