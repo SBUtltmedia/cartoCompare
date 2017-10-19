@@ -2,7 +2,7 @@
         var map;
         var overlay;
         var layers = [];
-        var layerState = ["2010", "1960"];
+        var layerState = ["2000", "1960"];
         var sqlSources = {
             "1960": "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0", //END1960
 
@@ -12,7 +12,7 @@
 
             "1990": "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0", //END1990
 
-            "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0", //END2000
+            "2000": "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0", //END2000
 
             "2010": "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0" //END2010
         };
@@ -39,11 +39,12 @@
                     cartocss: '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }',
                     interactivity: "cartodb_id"
                 },
-                {
+                /**{
                     sql: "",
-                    cartocss: "#Points { marker-width: 14; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
+                    cartocss: "#Points { marker-width: 10; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
                     interactivity: "cartodb_id"
-                },{
+                },**/
+                        {
                     type: "http",
                     urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
                     subdomains: ["a", "b", "c"]
@@ -54,7 +55,7 @@
         function makeCLSource(year) { //
             var cartoClone = JSON.parse(JSON.stringify(CartoLayerSource));
             cartoClone.sublayers[0].sql = sqlSources[year];
-            cartoClone.sublayers[1].sql = PntSrc[year];
+            //cartoClone.sublayers[1].sql = PntSrc[year];
             return cartoClone;
             //console.log(cartoClone.sublayers[1])
         };
@@ -123,11 +124,13 @@
                         layers[i].addTo(map)
 
                     }
+                    cartodb.vis.Vis.addInfowindow(map, layers[1].getSubLayer(0), ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
+                    cartodb.vis.Vis.addInfowindow(map, layers[0].getSubLayer(0), ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
+                    $('#map').append(legend.render().el);
                 })
 
             })
             $("#compareSlider").val($("#compareSlider").val() + .1);
-            // layer.removeLayer(
         }
 
         function clearLayers() {
@@ -192,6 +195,11 @@
             // $("input[type=range]").val(1);
             window.setTimeout(clip, 100);
             setButtons()
+            $('#map').append(legend.render().el);
+
+            
+            
+            
             var gproxySrc = '2PACX-1vS5reLPK6XbxdRbrxKEgvM2a-aBRKh8qbVt9ej4HEv_Orw59ICfRThDCIoO7SZdFLTPZA1j1jlE4U7O';
             var urlSrc = "/gproxy/?id="+gproxySrc+"&gid=0";
             console.log(urlSrc)
@@ -210,9 +218,6 @@
                 cartodb.createLayer(map, cartoLayerSource).on('done', function(layer) {
                     console.log(layer)
                     layers[layerIndex] = layer;
-                    $('#map').append(legend.render().el);
-            
-                cartodb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
                     $("#compareSlider").val($("#compareSlider").val() + .1);
                     resolve("loaded")
 
