@@ -1,0 +1,283 @@
+Skip to content
+ 
+Search…
+All gists
+GitHub
+Sign up for a GitHub account Sign in
+Create a gist now
+Instantly share code, notes, and snippets.
+ Star 1  Fork 4 @jsanzjsanz/README.md
+Last active 2 months ago
+Embed  
+<script src="https://gist.github.com/jsanz/6a83dbae9d6e984ca938.js"></script>
+  Download ZIP
+ Code  Revisions 2  Stars 1  Forks 4
+CartoDB.js examples: add sublayers
+Raw
+ README.md
+This example shows how to create a Leaflet map with a basemap and an empty CartoDB.js layer. Once the layer is created a function is attached the event of the layers selector checkboxes so on any state change, the sublayers are removed and recreated according to the user selection.
+Raw
+ index.html
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" />
+    </head>
+    <body>
+      <div id="map"></div>
+      <aside class="layers">
+      <h2>Layers</h2>
+      <ul>
+        <li class="layer">
+            <input type="checkbox" id="nucleos" name="layer">
+            <label for="nucleos">Núcleos</label>
+        </li>
+        <li class="layer">
+            <input type="checkbox" id="rios" name="layer">
+            <label for="rios">Ríos</label>
+        </li>
+        <li class="layer">
+            <input type="checkbox" id="aloja" name="layer">
+            <label for="aloja">Alojamientos</label>
+        </li>
+      </ul>
+      </aside>
+      <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.14/cartodb.js"></script>
+      <script>
+      $( document ).ready(function() {
+        //Create the leaflet map
+        var map = L.map('map', {
+            zoomControl: true,
+            center: [39.583,2.670],
+            zoom: 12
+        });
+        var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+        // Layers definition
+        var layers = {
+          'nucleos': {
+            sql: 'SELECT * FROM nucleos_pobl_btn100',
+            cartocss: '#layer{polygon-fill: #D6301D;polygon-opacity: 0.7;}'
+          },
+          'rios': {
+            sql: 'SELECT * FROM rios_btn25',
+            cartocss: '#rios_btn25{line-color: #2E5387;line-width: 2;line-opacity: 0.7;}'
+          },
+          'aloja': {
+            sql: 'SELECT * FROM aloj_ocio_btn100',
+            cartocss: '#aloj_ocio_btn100{marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1.5; marker-width: 10; marker-fill: #3B007F; }'
+          }
+        }
+        // Empty layer
+        cartodb.createLayer(map,{
+            user_name: 'ignspaintest',
+            type: 'cartodb',
+            sublayers: []
+          })
+          .addTo(map)
+          .done(function(layer){
+            // When the layers inputs change fire this
+            $("input[name='layer']").change(function(){
+              // Clear the sublayers
+              layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+              // For every check activated, add a sublayer
+              $.each($("input[name='layer']:checked"), function(){
+                  layer.createSubLayer(layers[$(this).attr("id")]);
+              });
+            });
+        });
+      });
+      </script>
+    </body>
+</html>
+Raw
+ style.css
+* {
+    margin: 0;
+    padding: 0;
+}
+body, html {
+    min-height: 100%;
+    height: 100%;
+}
+#map {
+    border-top:1px solid rgba(0, 0, 0, .2);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+ol, ul {
+  list-style: none;
+}
+
+.layers {
+    position: absolute;
+    right: 20px;
+    bottom: 50px;
+    z-index: 10;
+    box-shadow: rgba(0,0,0,.2) 0 0 4px 2px;
+    background: #fff;
+    border: 1px solid #999;
+    width: auto;
+    overflow: hidden;
+    border-radius: 4px;
+    padding: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: Helvetica,Arial;
+    color: #999;
+}
+.layers li {
+  margin-bottom: 8px;
+}
+.layers li:last-child {
+  margin-bottom: 0;
+}
+.layers label, .layers input {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.layers input {
+  margin-right: 8px;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #999;
+  position: relative;
+}
+.layers input:focus {
+  outline: none;
+}
+.layers input:checked:before {
+  content:"";
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  display: inline-block;
+  left: 50%;
+  top: 50%;
+  margin-left: -2px;
+  margin-top: -2px;
+  background: #999;
+  border-radius: 50%;
+}
+
+.layers .layer input {
+  border-color: #42a4dc;
+}
+.layers .layer input:checked:before {
+  background: #42a4dc; 
+}
+
+.layers h2 {
+  margin-bottom: 12px;
+  color: #333;
+}
+Sign up for free to join this conversation on GitHub. Already have an account? Sign in to comment
+© 2017 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
+About<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" />
+    </head>
+    <body>
+      <div id="map"></div>
+      <aside class="layers">
+      <h2>Layers</h2>
+      <ul>
+        <li class="layer">
+            <input type="checkbox" id="nucleos" name="layer">
+            <label for="nucleos">Núcleos</label>
+        </li>
+        <li class="layer">
+            <input type="checkbox" id="rios" name="layer">
+            <label for="rios">Ríos</label>
+        </li>
+        <li class="layer">
+            <input type="checkbox" id="aloja" name="layer">
+            <label for="aloja">Alojamientos</label>
+        </li>
+      </ul>
+      </aside>
+      <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.14/cartodb.js"></script>
+      <script>
+      $( document ).ready(function() {
+
+        //Create the leaflet map
+        var map = L.map('map', {
+            zoomControl: true,
+            center: [39.583,2.670],
+            zoom: 12
+        });
+
+        var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        }).addTo(map);
+
+        // Layers definition
+        var layers = {
+          'nucleos': {
+            sql: 'SELECT * FROM nucleos_pobl_btn100',
+            cartocss: '#layer{polygon-fill: #D6301D;polygon-opacity: 0.7;}'
+          },
+          'rios': {
+            sql: 'SELECT * FROM rios_btn25',
+            cartocss: '#rios_btn25{line-color: #2E5387;line-width: 2;line-opacity: 0.7;}'
+          },
+          'aloja': {
+            sql: 'SELECT * FROM aloj_ocio_btn100',
+            cartocss: '#aloj_ocio_btn100{marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1.5; marker-width: 10; marker-fill: #3B007F; }'
+          }
+        }
+
+        // Empty layer
+        cartodb.createLayer(map,{
+            user_name: 'ignspaintest',
+            type: 'cartodb',
+            sublayers: []
+          })
+          .addTo(map)
+          .done(function(layer){
+            // When the layers inputs change fire this
+            $("input[name='layer']").change(function(){
+
+              // Clear the sublayers
+              layer.getSubLayers().forEach(function(sublayer){sublayer.remove()});
+
+              // For every check activated, add a sublayer
+              $.each($("input[name='layer']:checked"), function(){
+                  layer.createSubLayer(layers[$(this).attr("id")]);
+              });
+            });
+        });
+      });
+      </script>
+    </body>
+</html>
