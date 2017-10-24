@@ -131,3 +131,27 @@ ul {
 .cartodb-legend{
     align-self: center;
 }
+
+
+#rightCover{
+    background-color: red;
+    position: absolute;    
+    left:0px;
+    top:0px;
+    width:1000px;
+    height:1000px;
+}
+
+/*
+#leftCover{
+    background-color:blue;
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:1000px;
+    height:1000px;
+}
+*/
+
+
+
