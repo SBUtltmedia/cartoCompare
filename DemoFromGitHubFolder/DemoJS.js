@@ -4,6 +4,17 @@ var layerSides = {
  "rightLayer": {},
             "leftLayer": {}
 };
+
+var     CartoLayerSource = {
+        user_name: "latinos"
+        , api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced"
+        , type: 'cartodb'
+        , maps_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
+        , sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
+        , sublayers: [
+            ]
+    };
+
 var layers = {
     "demographics": {
         '1960': /**[**/ {
@@ -91,9 +102,27 @@ $(document).ready(function () {
             var Aside = '.layers' + S + ' ul ';
             $(Aside).append(li)
         }
+     $(".layersR .layer #2010").prop("checked", true);
+    $(".layersL .layer #1960").prop("checked", true);   
+          $("input[name='L']").change(function () {
+
+                clearandReload();
+                
+            });
+            
+            $("input[name='R']").change(function () {
+
+                clearandReload();
+                
+            });
+   
     }
+         loadBaseLayers()
     twoRadioForms("L");
     twoRadioForms("R");
+    //console.log( $(".layersR .layer #2010"));
+   
+    
     $("#compareSlider").draggable({
         axis: 'x'
         , containment: "parent"
@@ -108,12 +137,7 @@ $(document).ready(function () {
         }
     });
     //Create the leaflet map
-    map = L.map('map', {
-        zoomControl: true
-        , center: [40.789142, -73.134961]
-        , zoom: 9
-    });
-    var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
+    
 
     function layerLoaded(layer)
 {
@@ -129,37 +153,31 @@ console.log("adsf")
             })
         })
     }
-    CartoLayerSource = {
-        user_name: "latinos"
-        , api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced"
-        , type: 'cartodb'
-        , maps_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
-        , sql_api_template: "http://app2.gss.stonybrook.edu:80/user/{user}"
-        , sublayers: [
-            ]
-    };
-    map.on('move', clip);
-    retrieveLayer(map, CartoLayerSource,"rightLayer").then(function () {
+    
+    function loadBaseLayers(){
+        
+        
+        map = L.map('map', {
+        zoomControl: true
+        , center: [40.789142, -73.134961]
+        , zoom: 9
+    });
+    var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
+         retrieveLayer(map, CartoLayerSource,"rightLayer").then(function () {
         retrieveLayer(map, CartoLayerSource,"leftLayer").then(function () {
             
             layerSides["rightLayer"].createSubLayer(layers.demographics["1960"]);
             layerSides["leftLayer"].createSubLayer(layers.demographics["1970"]);
                    // clip()  
-            $("input[name='L']").change(function () {
-
-                clearandReload();
-                
-            });
-            
-            $("input[name='R']").change(function () {
-
-                clearandReload();
-                
-            });
+          
     
             
         });
     });
+    }
+
+    map.on('move', clip);
+   
     
     function clearandReload(){
         layerSides["leftLayer"].getSubLayers().forEach(function (sublayer) {
@@ -168,16 +186,33 @@ console.log("adsf")
                  layerSides["rightLayer"].getSubLayers().forEach(function (sublayer) {
                         sublayer.remove()
                     });
+
                     // For every check activated, add a sublayer
                 $.each($("input[name='L']:checked"), function () {
                 
                     layerSides["leftLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
+
                 });
                         $.each($("input[name='R']:checked"), function () {
                         
                     layerSides["rightLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
+
+//                    layerSides["rightLayer"].createSubLayer({
+//                    type: "http",
+//                    urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+//                    subdomains: ["a", "b", "c"]
+//                    });        
                 });
-        
+                layerSides["leftLayer"].createSubLayer({
+                    type: "http",
+                    urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                    subdomains: ["a", "b", "c"]
+                    });
+        layerSides["rightLayer"].createSubLayer({
+                    type: "http",
+                    urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+                    subdomains: ["a", "b", "c"]
+                    });
         
     }
     //            cartodb.createLayer(map,{
@@ -239,13 +274,14 @@ function clip() {
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize())
         , clipX = nw.x + (se.x - nw.x) * getSliderValue();
+    
+    var windowH = $(document).height();
+    var windowW = $(document).width();
     //console.log(layers[1].getContainer())
     leftRect= 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)'
     rightRect='rect(' +[nw.y,se.x,se.y,clipX].join('px,') + 'px)';
-    console.log("left: "+leftRect);
-    console.log("right: "+rightRect);
     $('#leftCover').css('clip',leftRect);
-    
+    console.log(rightRect);
     $('#rightCover').css('clip',rightRect);
     layerSides["leftLayer"].getContainer().style.clip = leftRect;
     
@@ -255,7 +291,6 @@ function clip() {
         //$(".leaflet-sbs-divider").css("left",clipX+"px");
     $(".leaflet-sbs-divider").css("left", thumbPos);
     map.invalidateSize(true)
-        //
 }
 
 function getSliderValue() {

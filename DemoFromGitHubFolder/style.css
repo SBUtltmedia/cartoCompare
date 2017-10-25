@@ -133,14 +133,16 @@ ul {
 }
 
 
+/*
 #rightCover{
     background-color: red;
     position: absolute;    
     left:0px;
     top:0px;
-    width:1000px;
+    width:100%;
     height:1000px;
 }
+*/
 
 /*
 #leftCover{
