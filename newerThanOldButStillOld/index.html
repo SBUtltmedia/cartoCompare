@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)http://portal.gss.stonybrook.edu/apps/carto/latino_pop_1960.html -->
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Latinos of LI &amp; NY </title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico">
+    <!-- include cartodb.js library -->
+    <link rel="stylesheet" href="cartodb.css">
+    <script src="cartoCompare/cartodb.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- link below is the style for the webpage-->
+    <link href = 'compareStyle.css' rel='stylesheet' type='text/css'>
+    <script src = "compareJS.js"></script>
+    <script src="jquery.csv.js"></script>
+    <!-- This script makes it easy to use Stamen basemaps   
+    script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script -->
+</head>
+
+<body>
+    <div id="compBarHolder">
+        <div class="compBar" id="compareSlider"></div>
+    </div>
+
+    <div class="RB">
+        <button id="1960_0" class="btn_0" >1960</button>
+        <button id="1970_0" class="btn_0">1970</button>
+        <button id="1980_0" class="btn_0">1980</button>
+        <button id="1990_0" class="btn_0"> 1990</button>
+        <button id="2000_0" class="btn_0"> 2000</button>
+        <button id="2010_0" class="btn_0"> 2010</button>
+    </div>
+
+    <div class="LB">
+        <button id="1960_1" class="btn_1">1960</button>
+        <button id="1970_1" class="btn_1">1970</button>
+        <button id="1980_1" class="btn_1">1980</button>
+        <button id="1990_1" class="btn_1">1990</button>
+        <button id="2000_1" class="btn_1">2000</button>
+        <button id="2010_1" class="btn_1">2010</button>
+    </div>
+
+    <div id="map"> </div>
+</body>
+
+</html>
