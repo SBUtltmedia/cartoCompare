@@ -15,6 +15,13 @@ var CartoLayerSource = {
             ]
 };
 
+
+//var CartoLayerSource ={
+//            user_name: 'ignspaintest',
+//            type: 'cartodb',
+//            sublayers: []
+//          }
+
 var layers = {
     "demographics": {
         '1960': /**[**/ {
@@ -240,7 +247,7 @@ $(document).ready(function () {
         //cartodb.vis.Vis.addInfowindow(map, "leftLayer", ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
         retrieveLayer(map, CartoLayerSource, "rightLayer").then(function () {
             retrieveLayer(map, CartoLayerSource, "leftLayer").then(function () {
-                initializeMaps();
+               initializeMaps();
             });
         });
     }
@@ -257,7 +264,7 @@ $(document).ready(function () {
             subdomains: ["a", "b", "c"]
         });
         
-        layerSides["rightLayer"].addLayer(PtsLayer).addTo(map);// ADD THE POINTS HERE
+        //layerSides["rightLayer"].addLayer(PtsLayer).addTo(map);// ADD THE POINTS HERE
     }
 
     function initializeMaps() {
@@ -279,9 +286,9 @@ $(document).ready(function () {
             clearandReload();
 
         });
-        loadSubLayers();
+     loadSubLayers();
 
-        loadLabelLayers();
+       // loadLabelLayers();
 
     }
 
@@ -315,8 +322,8 @@ $(document).ready(function () {
 
             layerSides["rightLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
         });
-        loadLabelLayers();
-        window.setTimeout(clip,100);
+      loadLabelLayers();
+        window.setTimeout(clip,1000);
 
     }
 
