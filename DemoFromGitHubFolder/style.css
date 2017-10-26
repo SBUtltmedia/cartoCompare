@@ -155,5 +155,6 @@ ul {
 }
 */
 
+#map .cartodb-legend { position: absolute; right: 30px; width: 100px; top:10px; background: rgba(255,255,255,1); padding: 15px; z-index: 99; bottom: auto;}
 
 
