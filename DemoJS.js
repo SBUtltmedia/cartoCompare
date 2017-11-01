@@ -73,16 +73,38 @@ var layers = {
             cartocss: addGeoCSS()
         }
     },
-    "interviews": {
-        'points1': {
+    "Points": {
+        '1960': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='1960'",
-            cartocss: addPointCSS()
-        }
+            cartocss: addPointCSS(),
+            interactivity: "name, properties, cartodb_id"
+        },
+        '1970': {
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970'",
+            cartocss: addPointCSS(),
+            interactivity: 'name, properties, cartodb_id'
+        },
+        '1980': {
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1980'",
+            cartocss: addPointCSS(),
+            interactivity: 'name, properties, cartodb_id'
+        },
+        '1990': {
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1990'",
+            cartocss: addPointCSS(),
+            interactivity: 'name, properties, cartodb_id'
+        },
+        '2000': {
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='2000'",
+            cartocss: addPointCSS(),
+            interactivity: 'name, properties, cartodb_id'
+        },
+        '2010': {
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='2010'",
+            cartocss: addPointCSS(),
+            interactivity: 'name, properties, cartodb_id'
+        }   
     }
-    /**,{
-                  sql:'',
-                  cartocss addPointCSS():
-              }]**/
 }
 
 function addGeoCSS() {
@@ -117,70 +139,92 @@ var legend = new cdb.geo.ui.Legend({
             }]
     });
 
-var points = {
-            "type": "FeatureCollection",
-            "features": [{
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-73.13568592071533,
-                            40.9168853228506
-                        ]
-                    },
-                    "options":{ tags: ['origin'] },
-                    "properties": {
-                        "youtube_id": "tLLCHbCgJbM",
-                        "video_second": 0
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-73.15971851348877,
-                            40.876141411413684
-                        ]
-                    },
-                     "options":{ tags: ['Home Ownership','adulthood'] },
-                    "properties": {
-                        "youtube_id": "tLLCHbCgJbM",
-                        "video_second": 100
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [-73.0021333694458,
-                            40.959159772134896
-                        ]
-                    },
-                     "options":{ tags: ['adulthood'] },
-                    "properties": {
-                        "youtube_id": "tLLCHbCgJbM",
-                        "video_second": 200
-                    }
-                }
-            ]
-        }
+//ForVideo//
+//var tag = document.createElement('script');
+//tag.src = "https:https://www.youtub.com/iframe_api";
+//var firstScriptTag = document.getElementsByTagName('script')[0];
+//firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+//
+//function highlightFeature(e){
+//                    var layer = e.target;            
+//            		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+//            			layer.bringToFront();
+//            		}
+//            
+//                L.control().update(layer.feature.properties);
+//}
+//
+//function resetHighlight(e) {} //callback
+//
+//function zoomToFeature(e) {} //callback
+//
+//var geojson;
+//var player;
+//var vidPopup;
+//
+//var vidPlayer = L.control({
+//        position: 'bottomcenter'
+//});
+//
+//vidPlayer.update = function(vidPopup) {
+//            this._div.innerHTML = (vidPopup ? '<b>' + vidPopup + '</b><br />' : 'Select a Point');
+//};
+//
+//vidPlayer.onAdd = function(map) {
+//            this._div = L.DomUtil.create('div', 'vidPlayer');
+//            this._div.id = "player";
+//            this.update();
+//            return this._div;
+//};
+//vidPlayer.addTo(map);
+//
+//function pointClicked(data,leftOrRight){
+//    leftOrRight.on('click',function(e){
+//        var PropertyJSON = JSON.parse(data.properties);
+//        YT_id = PropertyJSON.youtube_id;
+//        vidSec = PropertyJSON.video_second;
+//        if (!player){
+//            player = new YT.Player('player',{
+//                    height: '236.25',
+//                    width: '420',
+//                    videoId: YT_id,
+//                    playerVars: {
+//                    autoplay: 0,
+//                    start: vidSec,
+//                    rel: 0,
+//                },
+//                events: {
+//                    'onReady': onPlayerReady,
+//                }
+//            });
+//        } 
+//        else {
+//        
+//            player.loadVideoById({
+//                videoId: YT_id,
+//                startSeconds: vidSec
+//            });        
+//        }
+//        return YT_id;
+//    })
+//}
+//
+//function onPlayerReady(event) {
+//    event.target.playVideo();
+//}
+//
 
-var pointsToVideo = L.control();
+////////////
 
-var North = L.marker([-73.0021333694458,40.959159772134896]).bindPopup("North");
-var Mid = L.marker([-73.13568592071533,40.9168853228506]).bindPopup("Mid");
-var South = L.marker([-73.15971851348877,40.876141411413684]).bindPopup("South");
+          /**  L.control.tagFilterButton({
+        data: ['origin', 'childhood', 'adulthood','none'],
+        icon: '<img src="filter.png">',
+        filterOnEveryClick: true
+    }).addTo( map );**/
 
-var Pts = L.layerGroup([North,Mid,South]);
-
-var PtsLayer  ={
-    "Points":Pts
-};
-
-//https://stackoverflow.com/questions/25372033/adding-layers-in-layer-group-dynamically-to-layer-control-in-leaflet
-
-//http://leafletjs.com/examples/layers-control/
-
-//Points addded in loadLabelLayers
+function gProxyPoints(){
+    // extract data
+}
 
 $(document).ready(function () {
     loadBaseLayers()
@@ -278,7 +322,6 @@ $(document).ready(function () {
 
             clearandReload();
 
-
         });
 
         $("input[name='R']").change(function () {
@@ -286,9 +329,14 @@ $(document).ready(function () {
             clearandReload();
 
         });
-     loadSubLayers();
+          loadSubLayers()
+        addInteractivity();
+          window.setTimeout(addInteractivity(),500);
+    
+      
 
        // loadLabelLayers();
+        
 
     }
 
@@ -300,7 +348,6 @@ $(document).ready(function () {
 
     }
 
-
     function clearSubLayers() {
         layerSides["leftLayer"].getSubLayers().forEach(function (sublayer) {
             sublayer.remove()
@@ -311,23 +358,43 @@ $(document).ready(function () {
 
     }
 
-
+    function addInteractivity(){
+        var leftSub1 = layerSides["leftLayer"].getSubLayer(1);
+        leftSub1.setInteraction(true)
+            leftSub1.on('featureClick',function(event, latlng, pos, data, layerIndex) {
+    console.log(data.properties);
+                console.log(data);
+});
+        
+        var RightSub1 = layerSides["rightLayer"].getSubLayer(1);
+        RightSub1.setInteraction(true)
+            RightSub1.on('featureClick',function(event, latlng, pos, data, layerIndex) {
+    console.log(data);
+                
+                
+                
+            });
+    }
+    
     function loadSubLayers() {
 
         $.each($("input[name='L']:checked"), function () {
 
-            layerSides["leftLayer"].createSubLayer(layers.demographics[$(this).attr("id")])
+            layerSides["leftLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
+            
+            layerSides["leftLayer"].createSubLayer(layers.Points[$(this).attr("id")]);
+            
         });
         $.each($("input[name='R']:checked"), function () {
 
             layerSides["rightLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
+             layerSides["rightLayer"].createSubLayer(layers.Points[$(this).attr("id")]);
         });
       loadLabelLayers();
-        window.setTimeout(clip,1000);
+        window.setTimeout(clip,500);
 
     }
-
-
+    
 });
 
 function clip() {
@@ -373,3 +440,4 @@ function getSliderValue() {
     // var consoleLogadd = JSON.stringify(barWidthp+sliderBarPosXp);
     //console.log(consoleLogadd);
 }
+
