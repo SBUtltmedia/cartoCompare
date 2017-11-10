@@ -111,6 +111,7 @@ ul {
 .layersL h2 {
     margin-bottom: 12px;
     color: #333;
+    z-index: 1000;
 }
 
 #compBarHolder {
@@ -155,6 +156,14 @@ ul {
 }
 */
 
-#map .cartodb-legend { position: absolute; right: 30px; width: 100px; top:10px; background: rgba(255,255,255,1); padding: 15px; z-index: 99; bottom: auto;}
+#map .cartodb-legend { position: absolute; right: 30px; width: 100px; top:10px; background: rgba(255,255,255,1); padding: 15px; z-index: 1000; bottom: auto;}
 
-
+#playerDiv{
+    position: absolute;
+    width:350px;
+    height: 250px;
+    background:blue;
+    bottom:25px;
+    left:35%;
+    z-index:9999999999999999999999;
+}

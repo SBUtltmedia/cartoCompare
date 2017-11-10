@@ -1,8 +1,32 @@
+//$.getScript("https://www.youtube.com/iframe_api");
+
+
+
+
+
+
+
+
+
+
+//
+//
+// DO FOR EACH WHENEVER SOMETHING IS CALLED TWICE FOR (LEFT AND RIGHT LAYERS)
+//
+//
+
+
+
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var map;
 var layerSides = {
     "rightLayer": {}
     , "leftLayer": {}
 };
+var layerShortHand={"rightLayer":"R", "leftLayer":"L"}
 var CartoLayerSource = {
     user_name: "latinos"
     , api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced"
@@ -51,7 +75,7 @@ var layers = {
             , interactivity: "name, properties, cartodb_id"
         }
         , '1970': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970'"
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970' options like '%adulthood%'"
             , cartocss: addPointCSS()
             , interactivity: 'name, properties, cartodb_id'
         }
@@ -121,43 +145,52 @@ var player;
 var vidPopup;
 var vidPlayer;
 
-function pointClicked(data, leftOrRight) {
-
-        var PropertyJSON = JSON.parse(data.properties);
-        console.log(PropertyJSON);
-        YT_id = PropertyJSON.youtube_id;
-        vidSec = PropertyJSON.video_second;
-        if (!player) {
-                playerControl(YT_id,vidSec);
-        }
-        else {
-            player.loadVideoById({ //error here
-                videoId: YT_id
-                , startSeconds: vidSec
-            });
-        }
-        return YT_id;
-    
+function pointClicked(data) {
+    //var PropertyJSON = JSON.parse(data.properties);
+    console.log(data);
+    YT_id = data.youtube_id;
+    vidSec = data.video_second;
+    if (!player) {
+        player = new YT.Player('playerDiv', {
+            height: '236.25'
+            , width: '420'
+            , videoId: YT_id
+            , playerVars: {
+                autoplay: 0
+                , start: vidSec
+                , rel: 0
+            , }
+            , events: {
+                'onReady': onPlayerReady
+            , }
+        });
+        //    playerControl(YT_id,vidSec);
+    }
+    else {
+        console.log(player, YT_id, vidSec, data)
+        player.loadVideoById({
+            videoId: YT_id
+            , startSeconds: vidSec
+        });
+    }
+    return YT_id;
 }
 
-
-function playerControl(YT_id, vidSec){
-                player = new YT.Player('playerDiv', {
-                height: '236.25'
-                , width: '420'
-                , videoId: YT_id
-                , playerVars: {
-                    autoplay: 0
-                    , start: vidSec
-                    , rel: 0
-                , }
-                , events: {
-                    'onReady': onPlayerReady
-                , }
-            });
+function playerControl(YT_id, vidSec) {
+    player = new YT.Player('playerDiv', {
+        height: '236.25'
+        , width: '420'
+        , videoId: YT_id
+        , playerVars: {
+            autoplay: 0
+            , start: vidSec
+            , rel: 0
+        , }
+        , events: {
+            'onReady': onPlayerReady
+        , }
+    });
 }
-
-
 
 function onPlayerReady(event) {
     event.target.playVideo();
@@ -168,7 +201,6 @@ function onPlayerReady(event) {
         icon: '<img src="filter.png">',
         filterOnEveryClick: true
     }).addTo( map );**/
-
 $(document).ready(function () {
     loadBaseLayers()
     $("#compareSlider").draggable({
@@ -190,7 +222,7 @@ $(document).ready(function () {
     function twoRadioForms(S) {
         var demo = Object.keys(layers["demographics"])
         for (i in demo) {
-            console.log(demo[i])
+            //console.log(demo[i])
             var li = $('<li/>')
                 , input = $('<input/>')
                 , label = $('<label/>');
@@ -213,10 +245,15 @@ $(document).ready(function () {
 
     function retrieveLayer(map, cartoLayerSource, layerSide) {
         return new Promise(function (resolve, reject) {
-            cartodb.createLayer(map, cartoLayerSource, layerLoaded).addTo(map).on('done', function (layer) {
+            cartodb.createLayer(map, cartoLayerSource).addTo(map).on('done', function (layer) {
+                console.log(layer);
                 layerSides[layerSide] = layer;
+                
+
                 resolve("loaded")
-            })
+            }).on('error', function(error) {
+                console.log(error);
+            });
         })
     }
 
@@ -228,7 +265,6 @@ $(document).ready(function () {
         });
         var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
         $('#map').append(legend.render().el);
-        //cartodb.vis.Vis.addInfowindow(map, "leftLayer", ['areaname','pct_hispanic','total_pop','hispanic','non_hispanic']);
         retrieveLayer(map, CartoLayerSource, "rightLayer").then(function () {
             retrieveLayer(map, CartoLayerSource, "leftLayer").then(function () {
                 initializeMaps();
@@ -237,21 +273,24 @@ $(document).ready(function () {
     }
 
     function loadLabelLayers() {
-        layerSides["leftLayer"].createSubLayer({
+        Object.keys(layerSides).forEach(function(currentLayer){
+   
+        layerSides[currentLayer].createSubLayer({
             type: "http"
             , urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
             , subdomains: ["a", "b", "c"]
         });
-        layerSides["rightLayer"].createSubLayer({
-            type: "http"
-            , urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
-            , subdomains: ["a", "b", "c"]
-        });
+        
+        })
         //layerSides["rightLayer"].addLayer(PtsLayer).addTo(map);// ADD THE POINTS HERE
     }
 
     function initializeMaps() {
         // clip()  
+        
+       
+        
+        
         twoRadioForms("L");
         twoRadioForms("R");
         $("input[name='L']").change(function () {
@@ -261,10 +300,10 @@ $(document).ready(function () {
             clearandReload();
         });
         loadSubLayers()
-        addInteractivity();
         window.setTimeout(addInteractivity(), 500);
         // loadLabelLayers();
     }
+                           
     map.on('move', clip);
 
     function clearandReload() {
@@ -282,18 +321,17 @@ $(document).ready(function () {
     }
 
     function addInteractivity() {
+        var dataToPlayer;
         var leftSub1 = layerSides["leftLayer"].getSubLayer(1);
-        leftSub1.setInteraction(true)
-        leftSub1.on('featureClick', function (event, latlng, pos, data, layerIndex) {
-            console.log(JSON.parse(data.properties));
-            pointClicked(data,layerSides["leftLayer"]);
-        });
         var RightSub1 = layerSides["rightLayer"].getSubLayer(1);
-        RightSub1.setInteraction(true)
-        RightSub1.on('featureClick', function (event, latlng, pos, data, layerIndex) {
-            console.log(data);
-            console.log(JSON.parse(data.properties)); pointClicked(data,layerSides["rightLayer"]);
-        });
+        var subArray = [leftSub1, RightSub1]
+        subArray.forEach(function (currentLayer) {
+            currentLayer.setInteraction(true)
+            currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
+                pointClicked(JSON.parse(data.properties));
+            });
+       
+        })
     }
 
     function loadSubLayers() {
@@ -305,11 +343,18 @@ $(document).ready(function () {
             layerSides["rightLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
             layerSides["rightLayer"].createSubLayer(layers.Points[$(this).attr("id")]);
         });
-        addInteractivity();
+
         loadLabelLayers();
         window.setTimeout(clip, 500);
     }
+    //pointClicked({youtube_id: "tLLCHbCgJbM", video_second: 0});
+    
+
 });
+
+
+
+
 
 function clip() {
     //console.log(layers[0].layers[0].options.sql)
@@ -323,7 +368,7 @@ function clip() {
     leftRect = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)'
     rightRect = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
     $('#leftCover').css('clip', leftRect);
-    console.log(rightRect);
+    //console.log(rightRect);
     $('#rightCover').css('clip', rightRect);
     layerSides["leftLayer"].getContainer().style.clip = leftRect;
     layerSides["rightLayer"].getContainer().style.clip = rightRect;
