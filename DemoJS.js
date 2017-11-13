@@ -1,5 +1,9 @@
 //TAG FILTER BUTTON
+
 //INFOWINDOW
+    // Can't easily implement the infowindow because it is based on the layer, if we clear and add new sublayer, the
+    // previous sublayer's info will pop up as well as the new infowindwos for the newly loaded layers
+
 //FOR EACH ON EACH LAYER -done
 
 var tag = document.createElement('script');
@@ -289,13 +293,12 @@ $(document).ready(function () {
     function loadSubLayers() { 
         Object.keys(layerSides).forEach(function (thisLayer){
             $.each($("input[name='"+layerShortHand[thisLayer]+"']:checked"), function () {
-                    layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);
-            var demo=    layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]);
-            
-                 demo.setInteraction(true);
-                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
-           console.log(event, latlng, pos, data, layerIndex)
-            });
+            var demo=    layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]); //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
+            layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);                    //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
+//                 demo.setInteraction(true);
+//                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
+//           console.log(event, latlng, pos, data, layerIndex)
+//            });
                 
                 
             });
