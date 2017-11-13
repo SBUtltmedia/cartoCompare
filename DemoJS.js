@@ -1,21 +1,6 @@
-//$.getScript("https://www.youtube.com/iframe_api");
-
-
-
-
-
-
-
-
-
-
-//
-//
-// DO FOR EACH WHENEVER SOMETHING IS CALLED TWICE FOR (LEFT AND RIGHT LAYERS)
-//
-//
-
-
+//TAG FILTER BUTTON
+//INFOWINDOW
+//FOR EACH ON EACH LAYER -done
 
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -36,11 +21,7 @@ var CartoLayerSource = {
     , sublayers: [
             ]
 };
-//var CartoLayerSource ={
-//            user_name: 'ignspaintest',
-//            type: 'cartodb',
-//            sublayers: []
-//          }
+
 var layers = {
     "demographics": {
         '1960': {
@@ -75,7 +56,7 @@ var layers = {
             , interactivity: "name, properties, cartodb_id"
         }
         , '1970': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970' options like '%adulthood%'"
+            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970' and options like '%adulthood%'"
             , cartocss: addPointCSS()
             , interactivity: 'name, properties, cartodb_id'
         }
@@ -109,6 +90,7 @@ function addGeoCSS() {
 function addPointCSS() {
     return "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}";
 }
+
 var legend = new cdb.geo.ui.Legend({
     type: "custom"
     , title: "Percent of Latino Population"
@@ -132,12 +114,6 @@ var legend = new cdb.geo.ui.Legend({
         , value: "#edf8fb"
             }]
 });
-//ForVideo//
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 function resetHighlight(e) {} //callback
 function zoomToFeature(e) {} //callback
 var geojson;
@@ -168,7 +144,7 @@ function pointClicked(data) {
     }
     else {
         console.log(player, YT_id, vidSec, data)
-        player.loadVideoById({
+      if(player.loadVideoById)  player.loadVideoById({
             videoId: YT_id
             , startSeconds: vidSec
         });
@@ -176,21 +152,7 @@ function pointClicked(data) {
     return YT_id;
 }
 
-function playerControl(YT_id, vidSec) {
-    player = new YT.Player('playerDiv', {
-        height: '236.25'
-        , width: '420'
-        , videoId: YT_id
-        , playerVars: {
-            autoplay: 0
-            , start: vidSec
-            , rel: 0
-        , }
-        , events: {
-            'onReady': onPlayerReady
-        , }
-    });
-}
+
 
 function onPlayerReady(event) {
     event.target.playVideo();
@@ -248,8 +210,6 @@ $(document).ready(function () {
             cartodb.createLayer(map, cartoLayerSource).addTo(map).on('done', function (layer) {
                 console.log(layer);
                 layerSides[layerSide] = layer;
-                
-
                 resolve("loaded")
             }).on('error', function(error) {
                 console.log(error);
@@ -274,34 +234,25 @@ $(document).ready(function () {
 
     function loadLabelLayers() {
         Object.keys(layerSides).forEach(function(currentLayer){
-   
         layerSides[currentLayer].createSubLayer({
             type: "http"
             , urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
             , subdomains: ["a", "b", "c"]
         });
-        
         })
-        //layerSides["rightLayer"].addLayer(PtsLayer).addTo(map);// ADD THE POINTS HERE
+        addInteractivity();
     }
 
     function initializeMaps() {
-        // clip()  
-        
-       
-        
-        
-        twoRadioForms("L");
-        twoRadioForms("R");
-        $("input[name='L']").change(function () {
+        var LR= ["L","R"];
+        LR.forEach(function(currentLR){
+            twoRadioForms(currentLR)
+            $("input[name='"+currentLR+"']").change(function () {
             clearandReload();
         });
-        $("input[name='R']").change(function () {
-            clearandReload();
         });
         loadSubLayers()
         window.setTimeout(addInteractivity(), 500);
-        // loadLabelLayers();
     }
                            
     map.on('move', clip);
@@ -312,11 +263,10 @@ $(document).ready(function () {
     }
 
     function clearSubLayers() {
-        layerSides["leftLayer"].getSubLayers().forEach(function (sublayer) {
-            sublayer.remove()
-        });
-        layerSides["rightLayer"].getSubLayers().forEach(function (sublayer) {
-            sublayer.remove()
+        Object.keys(layerSides).forEach(function(currentLayer){
+            layerSides[currentLayer].getSubLayers().forEach(function (sublayer) {
+                sublayer.remove();
+            });
         });
     }
 
@@ -330,51 +280,45 @@ $(document).ready(function () {
             currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                 pointClicked(JSON.parse(data.properties));
             });
-       
         })
+        
+        
+        
     }
 
-    function loadSubLayers() {
-        $.each($("input[name='L']:checked"), function () {
-            layerSides["leftLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
-            layerSides["leftLayer"].createSubLayer(layers.Points[$(this).attr("id")]);
+    function loadSubLayers() { 
+        Object.keys(layerSides).forEach(function (thisLayer){
+            $.each($("input[name='"+layerShortHand[thisLayer]+"']:checked"), function () {
+                    layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);
+            var demo=    layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]);
+            
+                 demo.setInteraction(true);
+                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
+           console.log(event, latlng, pos, data, layerIndex)
+            });
+                
+                
+            });
         });
-        $.each($("input[name='R']:checked"), function () {
-            layerSides["rightLayer"].createSubLayer(layers.demographics[$(this).attr("id")]);
-            layerSides["rightLayer"].createSubLayer(layers.Points[$(this).attr("id")]);
-        });
-
         loadLabelLayers();
         window.setTimeout(clip, 500);
     }
-    //pointClicked({youtube_id: "tLLCHbCgJbM", video_second: 0});
-    
-
 });
 
 
-
-
-
 function clip() {
-    //console.log(layers[0].layers[0].options.sql)
-    //console.log(layers[1].layers[0].options.sql)
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize())
         , clipX = nw.x + (se.x - nw.x) * getSliderValue();
     var windowH = $(document).height();
     var windowW = $(document).width();
-    //console.log(layers[1].getContainer())
     leftRect = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)'
     rightRect = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)';
     $('#leftCover').css('clip', leftRect);
-    //console.log(rightRect);
     $('#rightCover').css('clip', rightRect);
     layerSides["leftLayer"].getContainer().style.clip = leftRect;
     layerSides["rightLayer"].getContainer().style.clip = rightRect;
     var thumbPos = $(".leaflet-sbs-range")
-        //console.log(thumbPos);
-        //$(".leaflet-sbs-divider").css("left",clipX+"px");
     $(".leaflet-sbs-divider").css("left", thumbPos);
     map.invalidateSize(true)
 }
@@ -386,13 +330,10 @@ function getSliderValue() {
     mapWidth = mapWidth.substr(0, mapWidth.length - 2);
     sliderBarWidth = sliderBarWidth.substr(0, sliderBarWidth.length - 2);
     sliderBarPosX = sliderBarPosX.substr(0, sliderBarPosX.length - 2);
-    //console.log(mapWidth +"<- mapwidth | "+ sliderBarWidth+"<-  sliderBarWidth |"+ sliderBarPosX +"<- sliderBarPosX");
     mapWidth = parseInt(mapWidth);
     sliderBarWidth = parseInt(sliderBarWidth);
     sliderBarPosX = parseInt(sliderBarPosX);
     var barWidthp = sliderBarWidth / mapWidth;
     var sliderBarPosXp = sliderBarPosX / mapWidth;
     return (barWidthp + sliderBarPosXp);
-    // var consoleLogadd = JSON.stringify(barWidthp+sliderBarPosXp);
-    //console.log(consoleLogadd);
 }

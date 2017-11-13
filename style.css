@@ -160,10 +160,9 @@ ul {
 
 #playerDiv{
     position: absolute;
-    width:350px;
+    width:400px;
     height: 250px;
-    background:blue;
     bottom:25px;
-    left:35%;
+    left:40%;
     z-index:9999999999999999999999;
 }
