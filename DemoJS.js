@@ -1,4 +1,10 @@
-//TAG FILTER BUTTON
+//TAGFilterButttonvv
+/** //TAG FILTER BUTTON
+    //EVENT LISTENER FOR CHECKBOX(seehttps://stackoverflow.com/questions/8423217/jquery-checkbox-checked-state-changed-event)
+    // WHEN CHECKED, CHANGES QUERY STRING (see https://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page_)
+    //, WHICH THE QUERY STRING IS CALLED AS A PARAMETER (see https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript)
+    //TO GET THE KEYWORD FOR THE INTERACTIVITY OF THE POINT TO RELOAD IT. 
+**/
 
 //INFOWINDOW
     // Can't easily implement the infowindow because it is based on the layer, if we clear and add new sublayer, the
@@ -57,34 +63,60 @@ var layers = {
         '1960': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='1960'"
             , cartocss: addPointCSS()
-            , interactivity: "name, properties, cartodb_id"
+            , interactivity: 'name, properties, cartodb_id, options'
         }
         , '1970': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970' and options like '%adulthood%'"
             , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id'
+            , interactivity: 'name, properties, cartodb_id, options'
         }
         , '1980': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='1980'"
             , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id'
+            , interactivity: 'name, properties, cartodb_id, options'
         }
         , '1990': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='1990'"
             , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id'
+            , interactivity: 'name, properties, cartodb_id, options'
         }
         , '2000': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='2000'"
             , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id'
+            , interactivity: 'name, properties, cartodb_id, options'
         }
         , '2010': {
             sql: "SELECT * FROM latinos.comparisonmappoints where decade='2010'"
             , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id'
+            , interactivity: 'name, properties, cartodb_id, options'
         }
     }
+}
+
+
+//
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+// query string: ?foo=lorem&bar=&baz
+//var foo = getParameterByName('foo'); // "lorem"
+//
+
+
+//have the query string to have like: ?control=TagOption1&control
+
+
+
+function processQueryString(QString){
+    
 }
 
 function addGeoCSS() {
@@ -284,10 +316,7 @@ $(document).ready(function () {
             currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                 pointClicked(JSON.parse(data.properties));
             });
-        })
-        
-        
-        
+        }) 
     }
 
     function loadSubLayers() { 
@@ -306,6 +335,7 @@ $(document).ready(function () {
         loadLabelLayers();
         window.setTimeout(clip, 500);
     }
+
 });
 
 

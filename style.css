@@ -24,7 +24,7 @@ ul {
 }
 
 .layersR,
-.layersL {
+.layersL, #Filter {
     position: absolute;
     bottom: 50px;
     z-index: 10;
@@ -157,6 +157,14 @@ ul {
 */
 
 #map .cartodb-legend { position: absolute; right: 30px; width: 100px; top:10px; background: rgba(255,255,255,1); padding: 15px; z-index: 1000; bottom: auto;}
+
+#Filter{
+    position: absolute;
+    top: 155px;
+    right:45px;
+    height:15px;
+}
+
 
 #playerDiv{
     position: absolute;
