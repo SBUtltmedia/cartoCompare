@@ -7,10 +7,11 @@
 **/
 
 //INFOWINDOW
-    // Can't easily implement the infowindow because it is based on the layer, if we clear and add new sublayer, the
-    // previous sublayer's info will pop up as well as the new infowindwos for the newly loaded layers
+    //https://gis.stackexchange.com/questions/135919/can-i-trigger-a-cartodb-infowindow-programmatically
 
-//FOR EACH ON EACH LAYER -done
+// enable interactivity for demographics decade sublayers then for infowindow -> https://gis.stackexchange.com/questions/135919/can-i-trigger-a-cartodb-infowindow-programmatically
+
+
 
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -32,69 +33,69 @@ var CartoLayerSource = {
             ]
 };
 
+var decades = ["1960","1970","1980","1990","2000","2010"];
+
 var layers = {
     "demographics": {
         '1960': {
             sql: "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0"
-            , cartocss: addGeoCSS()
+            , cartocss: addGeoCSS(),
+            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
         }
         , '1970': {
             sql: "SELECT latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0"
-            , cartocss: addGeoCSS()
+            , cartocss: addGeoCSS(),
+            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
         }
         , '1980': {
-            sql: "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0"
-            , cartocss: addGeoCSS()
+            sql: "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0" 
+            , cartocss: addGeoCSS(),
+            interactivity:'total_pop, hispanic, non_hispanic'
         }
         , '1990': {
             sql: "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0"
-            , cartocss: addGeoCSS()
+            , cartocss: addGeoCSS(),
+            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
         }
         , '2000': {
             sql: "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0"
-            , cartocss: addGeoCSS()
+            , cartocss: addGeoCSS(),
+            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
         }
         , '2010': {
             sql: "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0"
-            , cartocss: addGeoCSS()
+            , cartocss: addGeoCSS(),
+            interactivity:'total_pop, hispanic, non_hispanic'
         }
     }
     , "Points": {
-        '1960': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1960'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
-        , '1970': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1970' and options like '%adulthood%'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
-        , '1980': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1980'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
-        , '1990': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='1990'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
-        , '2000': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='2000'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
-        , '2010': {
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='2010'"
-            , cartocss: addPointCSS()
-            , interactivity: 'name, properties, cartodb_id, options'
-        }
+        
     }
 }
 
+addPointSublayers();
 
-//
+function addPointSublayers(){
+    console.log(layers["Points"])
+     decades.forEach(function(decade){
+       // console.log(decade+" 5")
+        layers["Points"][decade]={
+            interactivity:'name, properties, cartodb_id, options',
+                cartocss:"#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
+              sql:"SELECT * FROM latinos.comparisonmappoints where decade='"+decade+"'",
+            };
+ 
+    })
+}
+
+function limitPoints(QueryStringArr){//
+    var newSQL = CartoLayerSource[sublayers][1][sql];
+    QueryStringArr.forEach(function(kewordStr){
+            newSQL+="and options like '%"+keywordStr+"%'";
+    });    
+    CartoLayerSource[sublayers][1][sql] = newSQL;
+} // CONCATENATE EACH KEYWORD IN QUERYSTRING INTO SQL
+
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -109,23 +110,29 @@ function getParameterByName(name, url) {
 // query string: ?foo=lorem&bar=&baz
 //var foo = getParameterByName('foo'); // "lorem"
 //
-
-
 //have the query string to have like: ?control=TagOption1&control
 
-
-
-function processQueryString(QString){
-    
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+function openInfowindow(layer, latlng, cartodb_id) {
+    layer.trigger('featureClick', null, latlng, null, { cartodb_id: cartodb_id }, 0);
 }
+///////////////////////////////////////////
+///////////////////////////////////////////
+/////////////for working on infoWindow/////
+///////////////////////////////////////////
 
 function addGeoCSS() {
     return '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }';
 }
 
-function addPointCSS() {
+function addPointCSS(){
     return "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}";
 }
+
+
 
 var legend = new cdb.geo.ui.Legend({
     type: "custom"
@@ -156,9 +163,8 @@ var geojson;
 var player;
 var vidPopup;
 var vidPlayer;
-
+var keyword;
 function pointClicked(data) {
-    //var PropertyJSON = JSON.parse(data.properties);
     console.log(data);
     YT_id = data.youtube_id;
     vidSec = data.video_second;
@@ -176,7 +182,6 @@ function pointClicked(data) {
                 'onReady': onPlayerReady
             , }
         });
-        //    playerControl(YT_id,vidSec);
     }
     else {
         console.log(player, YT_id, vidSec, data)
@@ -200,6 +205,10 @@ function onPlayerReady(event) {
         filterOnEveryClick: true
     }).addTo( map );**/
 $(document).ready(function () {
+  
+    console.log(layers["Points"])
+    keyword =getParameterByName("keyword")
+    
     loadBaseLayers()
     $("#compareSlider").draggable({
         axis: 'x'
@@ -276,7 +285,7 @@ $(document).ready(function () {
             , subdomains: ["a", "b", "c"]
         });
         })
-        addInteractivity();
+    addInteractivity();
     }
 
     function initializeMaps() {
@@ -288,7 +297,7 @@ $(document).ready(function () {
         });
         });
         loadSubLayers()
-        window.setTimeout(addInteractivity(), 500);
+       // window.setTimeout(addInteractivity(), 500);
     }
                            
     map.on('move', clip);
@@ -322,14 +331,13 @@ $(document).ready(function () {
     function loadSubLayers() { 
         Object.keys(layerSides).forEach(function (thisLayer){
             $.each($("input[name='"+layerShortHand[thisLayer]+"']:checked"), function () {
-            var demo=    layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]); //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
-            layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);                    //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
+            var demo=layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]); //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
+                console.log(layers.Points[$(this).attr("id")])
+            layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);                    //SWAP THESE LINES TO TEST COMMENTED-OUT LINES^^^
 //                 demo.setInteraction(true);
 //                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
 //           console.log(event, latlng, pos, data, layerIndex)
 //            });
-                
-                
             });
         });
         loadLabelLayers();
