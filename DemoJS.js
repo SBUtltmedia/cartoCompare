@@ -13,6 +13,12 @@
 
 
 
+//Find XPos of mouse location where clickef
+
+
+
+
+
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -22,6 +28,7 @@ var layerSides = {
     "rightLayer": {}
     , "leftLayer": {}
 };
+var clipX;
 var layerShortHand={"rightLayer":"R", "leftLayer":"L"}
 var CartoLayerSource = {
     user_name: "latinos"
@@ -35,37 +42,39 @@ var CartoLayerSource = {
 
 var decades = ["1960","1970","1980","1990","2000","2010"];
 
+var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic','total_pop','hispanic','non_hispanic'];
+
 var layers = {
     "demographics": {
         '1960': {
             sql: "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0"
             , cartocss: addGeoCSS(),
-            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
+            interactivity:geoInteractivity
         }
         , '1970': {
             sql: "SELECT latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0"
             , cartocss: addGeoCSS(),
-            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
+            interactivity:geoInteractivity
         }
         , '1980': {
             sql: "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0" 
             , cartocss: addGeoCSS(),
-            interactivity:'total_pop, hispanic, non_hispanic'
+            interactivity:geoInteractivity
         }
         , '1990': {
             sql: "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0"
             , cartocss: addGeoCSS(),
-            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
+            interactivity:geoInteractivity
         }
         , '2000': {
-            sql: "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as name FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0"
+            sql: "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0"
             , cartocss: addGeoCSS(),
-            interactivity:'cartodb_id, total_pop, hispanic, non_hispanic'
+           interactivity:geoInteractivity
         }
         , '2010': {
             sql: "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0"
             , cartocss: addGeoCSS(),
-            interactivity:'total_pop, hispanic, non_hispanic'
+            interactivity:geoInteractivity
         }
     }
     , "Points": {
@@ -114,12 +123,10 @@ function getParameterByName(name, url) {
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-///////////////////////////////////////////
-///////////////////////////////////////////
 function openInfowindow(layer, latlng, cartodb_id) {
+    console.log(122)
     layer.trigger('featureClick', null, latlng, null, { cartodb_id: cartodb_id }, 0);
 }
-///////////////////////////////////////////
 ///////////////////////////////////////////
 /////////////for working on infoWindow/////
 ///////////////////////////////////////////
@@ -324,20 +331,43 @@ $(document).ready(function () {
             currentLayer.setInteraction(true)
             currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                 pointClicked(JSON.parse(data.properties));
+                console.log(data.properties);
+                //openInfowindow(subArray[currentLayer],data.properties.ge);
             });
         }) 
     }
 
     function loadSubLayers() { 
+        var callOutToInfoWindow=[];
         Object.keys(layerSides).forEach(function (thisLayer){
             $.each($("input[name='"+layerShortHand[thisLayer]+"']:checked"), function () {
-            var demo=layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]); //SWAP THESE LINES TO TEST COMMENTED-OUT LINESVVV
-                console.log(layers.Points[$(this).attr("id")])
-            layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);                    //SWAP THESE LINES TO TEST COMMENTED-OUT LINES^^^
-//                 demo.setInteraction(true);
-//                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
-//           console.log(event, latlng, pos, data, layerIndex)
-//            });
+            var demo=layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]);
+                console.log(demo)
+            layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);     
+                 demo.setInteraction(true);
+                callOutToInfoWindow.push(demo);
+                //https://carto.com/docs/carto-engine/carto-js/events/#sublayerfeatureclickevent-latlng-pos-data-layerindex
+                ////////////////////////////////////////////////
+                //////////FIX SO INSTEAD OF console.log("L/R"),/
+                ////////////////////console.log(data) instead///
+                ////////////////////////////////////////////////
+                demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
+                    
+                    console.log("XPos: "+event.clientX)
+                    var OverclipX=(event.clientX>clipX) ? true:false;
+                    if (OverclipX===true){
+                        console.log("right");
+                        console.log(layerSides["rightLayer"].getSublayer.data);
+                    }
+                    else{
+                        console.log("left");
+                        console.log(callOutToInfoWindow[1].data)
+                    }
+                    
+           //console.log(event, latlng, pos, data, layerIndex)
+                    //console.log(layerSides[thisLayer])
+                    console.log(data.areaname)
+                });
             });
         });
         loadLabelLayers();
@@ -349,8 +379,8 @@ $(document).ready(function () {
 
 function clip() {
     var nw = map.containerPointToLayerPoint([0, 0])
-        , se = map.containerPointToLayerPoint(map.getSize())
-        , clipX = nw.x + (se.x - nw.x) * getSliderValue();
+        , se = map.containerPointToLayerPoint(map.getSize());
+    clipX = nw.x + (se.x - nw.x) * getSliderValue();
     var windowH = $(document).height();
     var windowW = $(document).width();
     leftRect = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)'
@@ -361,7 +391,7 @@ function clip() {
     layerSides["rightLayer"].getContainer().style.clip = rightRect;
     var thumbPos = $(".leaflet-sbs-range")
     $(".leaflet-sbs-divider").css("left", thumbPos);
-    map.invalidateSize(true)
+    map.invalidateSize(true);
 }
 
 function getSliderValue() {
