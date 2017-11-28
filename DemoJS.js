@@ -30,6 +30,7 @@ var layerSides = {
 };
 var clipX;
 var layerShortHand={"rightLayer":"R", "leftLayer":"L"}
+var IDsHover = {"L":null,"R":null};
 var CartoLayerSource = {
     user_name: "latinos"
     , api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced"
@@ -42,37 +43,37 @@ var CartoLayerSource = {
 
 var decades = ["1960","1970","1980","1990","2000","2010"];
 
-var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic','total_pop','hispanic','non_hispanic'];
+var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic','total_pop','hispanic','non_hispanic','year'];
 
 var layers = {
     "demographics": {
         '1960': {
-            sql: "SELECT latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0"
+            sql: "SELECT '1960' as year, latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0"
             , cartocss: addGeoCSS(),
             interactivity:geoInteractivity
         }
         , '1970': {
-            sql: "SELECT latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0"
+            sql: "SELECT '1970' as year, latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0"
             , cartocss: addGeoCSS(),
             interactivity:geoInteractivity
         }
         , '1980': {
-            sql: "SELECT latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0" 
+            sql: "SELECT '1980' as year,  latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0" 
             , cartocss: addGeoCSS(),
             interactivity:geoInteractivity
         }
         , '1990': {
-            sql: "SELECT latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0"
+            sql: "SELECT '1990' as year,  latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0"
             , cartocss: addGeoCSS(),
             interactivity:geoInteractivity
         }
         , '2000': {
-            sql: "SELECT latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0"
+            sql: "SELECT '2000' as year,  latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.tract_2000.cartodb_id as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0"
             , cartocss: addGeoCSS(),
            interactivity:geoInteractivity
         }
         , '2010': {
-            sql: "SELECT latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0"
+            sql: "SELECT '2010' as year,  latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.tract_2010.cartodb_id as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0"
             , cartocss: addGeoCSS(),
             interactivity:geoInteractivity
         }
@@ -83,6 +84,11 @@ var layers = {
 }
 
 addPointSublayers();
+
+function extractYear(sql){
+    return sql.split("_")[1];
+}
+
 
 function addPointSublayers(){
     console.log(layers["Points"])
@@ -339,6 +345,7 @@ $(document).ready(function () {
 
     function loadSubLayers() { 
         var callOutToInfoWindow=[];
+        var cnt=0;
         Object.keys(layerSides).forEach(function (thisLayer){
             $.each($("input[name='"+layerShortHand[thisLayer]+"']:checked"), function () {
             var demo=layerSides[thisLayer].createSubLayer(layers.demographics[$(this).attr("id")]);
@@ -348,25 +355,31 @@ $(document).ready(function () {
                 callOutToInfoWindow.push(demo);
                 //https://carto.com/docs/carto-engine/carto-js/events/#sublayerfeatureclickevent-latlng-pos-data-layerindex
                 ////////////////////////////////////////////////
-                //////////FIX SO INSTEAD OF console.log("L/R"),/
+                ///////FIX SO INSTEAD OF console.log("L/R"),////
                 ////////////////////console.log(data) instead///
                 ////////////////////////////////////////////////
+                
+                /// create function that extracts the which year is selected from radio forms,
+                // extract sql of year from layer
+                //var layerDecade = layerSides[thisLayer].layers[0].options.sql.substring(8,12);
                 demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
-                    
-                    console.log("XPos: "+event.clientX)
+                    var layerDecade;
                     var OverclipX=(event.clientX>clipX) ? true:false;
                     if (OverclipX===true){
-                        console.log("right");
-                        console.log(layerSides["rightLayer"].getSublayer.data);
+                        layerDecade = layerSides["leftLayer"].layers[0].options.sql.substring(8,12);
                     }
                     else{
-                        console.log("left");
-                        console.log(callOutToInfoWindow[1].data)
+                       // console.log(IDsHover["L"]);
+                        //console.log(callOutToInfoWindow[1].data)
+                        layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8,12);
+                    }
+                    if (data.year==parseInt(layerDecade)){
+                        console.log("CartoDB_ID:"+data.cartodb_id)
                     }
                     
-           //console.log(event, latlng, pos, data, layerIndex)
-                    //console.log(layerSides[thisLayer])
-                    console.log(data.areaname)
+//                   
+
+                
                 });
             });
         });
@@ -376,6 +389,16 @@ $(document).ready(function () {
 
 });
 
+function extractLayerDecades(){
+     $.each($("input[name='L']:checked"), function (year) {
+        IDsHover["L"] = year
+    });
+    $.each($("input[name='R']:checked"), function (year) {
+        IDsHover["R"] = year
+    });
+    
+                   
+}
 
 function clip() {
     var nw = map.containerPointToLayerPoint([0, 0])
