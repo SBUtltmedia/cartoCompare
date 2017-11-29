@@ -362,19 +362,24 @@ $(document).ready(function () {
                 /// create function that extracts the which year is selected from radio forms,
                 // extract sql of year from layer
                 //var layerDecade = layerSides[thisLayer].layers[0].options.sql.substring(8,12);
+                
                 demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                     var layerDecade;
-                    var OverclipX=(event.clientX>clipX) ? true:false;
+                    var layerPoint = map.mouseEventToLayerPoint(event).x;
+                    var OverclipX=(layerPoint>clipX) ? true:false;
                     if (OverclipX===true){
-                        layerDecade = layerSides["leftLayer"].layers[0].options.sql.substring(8,12);
+                        layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8,12);
                     }
                     else{
                        // console.log(IDsHover["L"]);
                         //console.log(callOutToInfoWindow[1].data)
-                        layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8,12);
+                        layerDecade = layerSides["leftLayer"].layers[0].options.sql.substring(8,12);
                     }
                     if (data.year==parseInt(layerDecade)){
+                        console.log("------")
                         console.log("CartoDB_ID:"+data.cartodb_id)
+                        console.log("Hispanic%:"+(data.pct_hispanic)+"%")
+                         console.log("Decade:"+layerDecade)
                     }
                     
 //                   
@@ -403,6 +408,8 @@ function extractLayerDecades(){
 function clip() {
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize());
+    
+    
     clipX = nw.x + (se.x - nw.x) * getSliderValue();
     var windowH = $(document).height();
     var windowW = $(document).width();
