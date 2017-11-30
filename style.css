@@ -172,5 +172,21 @@ ul {
     height: 250px;
     bottom:25px;
     left:40%;
-    z-index:9999999999999999999999;
+    z-index:9999999999999999;
+}
+
+#popUp{
+    position: absolute;
+    z-index: 10;
+    box-shadow: rgba(0, 0, 0, .2) 0 0 4px 2px;
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 11px;
+    font-family: Helvetica, Arial;
+    color: #000;
+    height: auto;
+    width:auto;
+    z-index:999999999999999999999999;
 }

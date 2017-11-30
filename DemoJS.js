@@ -41,6 +41,90 @@ var CartoLayerSource = {
             ]
 };
 
+
+var pieConfig= {
+	"header": {
+		"title": {
+			"text": "Total Population:",
+			"fontSize": 11
+		},
+		"subtitle": {
+			"text": "XXXXXX",
+			"color": "#999999",
+			"fontSize": 12,
+			"font": "courier"
+		},
+		"location": "pie-center",
+		"titleSubtitlePadding": 1
+	},
+	"footer": {
+		"color": "#999999",
+		"fontSize": 10,
+		"font": "open sans",
+		"location": "bottom-left"
+	},
+	"size": {
+		"canvasHeight": 275,
+		"canvasWidth": 335,
+		"pieInnerRadius": "65%",
+		"pieOuterRadius": "63%"
+	},
+	"data": {
+		"sortOrder": "label-desc",
+		"content": [
+			{
+				"label": "Hispanic",
+				"value": 10,
+				"color": "#c18ce6"
+			},
+			{
+				"label": "Non-Hispanic",
+				"value": 10,
+				"color": "#cac5c4"
+			}
+		]
+	},
+	"labels": {
+		"outer": {
+			"format": "label-value2",
+			"pieDistance": 19
+		},
+		"mainLabel": {
+			"fontSize": 11
+		},
+		"percentage": {
+			"color": "#000000",
+			"fontSize": 11,
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#000000",
+			"fontSize": 11
+		},
+		"lines": {
+			"enabled": true,
+			"color": "#777777"
+		},
+		"truncation": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"load": {
+			"speed": 500
+		},
+		"pullOutSegmentOnClick": {
+			"effect": "none",
+			"speed": 400,
+			"size": 8
+		}
+	},
+	"misc": {
+		"colors": {
+			"segmentStroke": "#000000"
+		}
+	}
+};
 var decades = ["1960","1970","1980","1990","2000","2010"];
 
 var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic','total_pop','hispanic','non_hispanic','year'];
@@ -129,10 +213,7 @@ function getParameterByName(name, url) {
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
-function openInfowindow(layer, latlng, cartodb_id) {
-    console.log(122)
-    layer.trigger('featureClick', null, latlng, null, { cartodb_id: cartodb_id }, 0);
-}
+
 ///////////////////////////////////////////
 /////////////for working on infoWindow/////
 ///////////////////////////////////////////
@@ -353,38 +434,37 @@ $(document).ready(function () {
             layerSides[thisLayer].createSubLayer(layers.Points[$(this).attr("id")]);     
                  demo.setInteraction(true);
                 callOutToInfoWindow.push(demo);
-                //https://carto.com/docs/carto-engine/carto-js/events/#sublayerfeatureclickevent-latlng-pos-data-layerindex
-                ////////////////////////////////////////////////
-                ///////FIX SO INSTEAD OF console.log("L/R"),////
-                ////////////////////console.log(data) instead///
-                ////////////////////////////////////////////////
-                
-                /// create function that extracts the which year is selected from radio forms,
-                // extract sql of year from layer
-                //var layerDecade = layerSides[thisLayer].layers[0].options.sql.substring(8,12);
-                
                 demo.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                     var layerDecade;
-                    var layerPoint = map.mouseEventToLayerPoint(event).x;
+                    var cursorCoordinates = map.mouseEventToLayerPoint(event);
+                    var layerPoint = cursorCoordinates.x;
                     var OverclipX=(layerPoint>clipX) ? true:false;
                     if (OverclipX===true){
+                        
                         layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8,12);
                     }
                     else{
-                       // console.log(IDsHover["L"]);
-                        //console.log(callOutToInfoWindow[1].data)
+
                         layerDecade = layerSides["leftLayer"].layers[0].options.sql.substring(8,12);
                     }
+
                     if (data.year==parseInt(layerDecade)){
                         console.log("------")
                         console.log("CartoDB_ID:"+data.cartodb_id)
                         console.log("Hispanic%:"+(data.pct_hispanic)+"%")
                          console.log("Decade:"+layerDecade)
-                    }
-                    
-//                   
-
-                
+                        if (!$("#popUp").length){
+                            var popUp=$("<div/>",{id:"popUp"})
+                            $("#popUpHolder").append(popUp)    
+                        }
+                        $("#popUp").css({"left":event.clientX+5,"top":event.clientY+5});
+                        console.log(data)
+                        pieConfig.data.content[0].value = data.hispanic;
+                        pieConfig.data.content[1].value = data.non_hispanic;
+                        var pie = new d3pie("pieChart",pieConfig);
+                        $("#popUp").html(pie); // doesnt work
+                     //http://d3pie.org/#quickStart          
+                    }  
                 });
             });
         });
@@ -406,6 +486,10 @@ function extractLayerDecades(){
 }
 
 function clip() {
+    
+    if ($("#popUp")){
+        $("#popUp").remove()
+    }
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize());
     
