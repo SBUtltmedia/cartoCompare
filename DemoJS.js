@@ -1,6 +1,7 @@
 //You know the custom location for infowindow on click to view pie chart and how it dissapears on clip?
 //do it for the youtube video when a point is clicked 
-
+//change the id of popUp to a class
+// make the youtube video div have class popUp
 
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -49,17 +50,12 @@ var pieConfig= {
 		"location": "pie-center",
 		"titleSubtitlePadding": 1
 	},
-	"footer": {
-		"color": "#999999",
-		"fontSize": 10,
-		"font": "open sans",
-		"location": "bottom-left"
-	},
+	
 	"size": {
 		"canvasHeight": 225,
 		"canvasWidth": 225,
-		"pieInnerRadius": "75%",
-		"pieOuterRadius": "70%"
+		"pieInnerRadius": "65%",
+		"pieOuterRadius": "80%"
 	},
 	"data": {
 		"sortOrder": "label-desc",
@@ -74,12 +70,12 @@ var pieConfig= {
 			"fontSize": 11
 		},
 		"percentage": {
-			"color": "#000000",
+			"color": "#000",
 			"fontSize": 11,
 			"decimalPlaces": 0
 		},
 		"value": {
-			"color": "#000000",
+			"color": "#000",
 			"fontSize": 11
 		},
 		"lines": {
@@ -155,7 +151,6 @@ function extractYear(sql){
     return sql.split("_")[1];
 }
 
-
 function addPointSublayers(){
     console.log(layers["Points"])
      decades.forEach(function(decade){
@@ -193,13 +188,6 @@ function getParameterByName(name, url) {
 //
 //have the query string to have like: ?control=TagOption1&control
 
-///////////////////////////////////////////
-///////////////////////////////////////////
-
-///////////////////////////////////////////
-/////////////for working on infoWindow/////
-///////////////////////////////////////////
-
 function addGeoCSS() {
     return '#layer { polygon-fill: #810f7c; polygon-opacity: 1; line-width: 0.5; line-color: #b9b1b1; line-opacity: 0.5; } #layer[ pct_hispanic <= 80] { polygon-fill: #8856a7; } #layer[ pct_hispanic <= 40] { polygon-fill: #8c96c6; } #layer [ pct_hispanic <= 20] { polygon-fill: #9ebcda; } #layer [ pct_hispanic <= 10] { polygon-fill: #bfd3e6; } #layer [ pct_hispanic <= 5] { polygon-fill: #edf8fb; }';
 }
@@ -207,8 +195,6 @@ function addGeoCSS() {
 function addPointCSS(){
     return "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}";
 }
-
-
 
 var legend = new cdb.geo.ui.Legend({
     type: "custom"
@@ -270,16 +256,10 @@ function pointClicked(data) {
 }
 
 
-
 function onPlayerReady(event) {
     event.target.playVideo();
 }
-////////////
-/**  L.control.tagFilterButton({
-        data: ['origin', 'childhood', 'adulthood','none'],
-        icon: '<img src="filter.png">',
-        filterOnEveryClick: true
-    }).addTo( map );**/
+
 $(document).ready(function () {
   
     console.log(layers["Points"])
