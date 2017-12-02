@@ -1,22 +1,5 @@
-//TAGFilterButttonvv
-/** //TAG FILTER BUTTON
-    //EVENT LISTENER FOR CHECKBOX(seehttps://stackoverflow.com/questions/8423217/jquery-checkbox-checked-state-changed-event)
-    // WHEN CHECKED, CHANGES QUERY STRING (see https://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page_)
-    //, WHICH THE QUERY STRING IS CALLED AS A PARAMETER (see https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript)
-    //TO GET THE KEYWORD FOR THE INTERACTIVITY OF THE POINT TO RELOAD IT. 
-**/
-
-//INFOWINDOW
-    //https://gis.stackexchange.com/questions/135919/can-i-trigger-a-cartodb-infowindow-programmatically
-
-// enable interactivity for demographics decade sublayers then for infowindow -> https://gis.stackexchange.com/questions/135919/can-i-trigger-a-cartodb-infowindow-programmatically
-
-
-
-//Find XPos of mouse location where clickef
-
-
-
+//You know the custom location for infowindow on click to view pie chart and how it dissapears on clip?
+//do it for the youtube video when a point is clicked 
 
 
 var tag = document.createElement('script');
@@ -41,6 +24,15 @@ var CartoLayerSource = {
             ]
 };
 
+var pieChartData = [{
+				"label": "Hispanic",
+				"value": 100,
+				"color": "#c18ce6"
+			},{"label": "Non-Hispanic",
+				"value": 100,
+				"color": "#dbdbdb"}];
+
+var tP = 33333;
 
 var pieConfig= {
 	"header": {
@@ -49,10 +41,10 @@ var pieConfig= {
 			"fontSize": 11
 		},
 		"subtitle": {
-			"text": "XXXXXX",
-			"color": "#999999",
+			"text": tP,
+			"color": "#000",
 			"fontSize": 12,
-			"font": "courier"
+			"font": "open sans"
 		},
 		"location": "pie-center",
 		"titleSubtitlePadding": 1
@@ -64,25 +56,14 @@ var pieConfig= {
 		"location": "bottom-left"
 	},
 	"size": {
-		"canvasHeight": 275,
-		"canvasWidth": 335,
-		"pieInnerRadius": "65%",
-		"pieOuterRadius": "63%"
+		"canvasHeight": 225,
+		"canvasWidth": 225,
+		"pieInnerRadius": "75%",
+		"pieOuterRadius": "70%"
 	},
 	"data": {
 		"sortOrder": "label-desc",
-		"content": [
-			{
-				"label": "Hispanic",
-				"value": 10,
-				"color": "#c18ce6"
-			},
-			{
-				"label": "Non-Hispanic",
-				"value": 10,
-				"color": "#cac5c4"
-			}
-		]
+		"content": pieChartData
 	},
 	"labels": {
 		"outer": {
@@ -125,6 +106,7 @@ var pieConfig= {
 		}
 	}
 };
+
 var decades = ["1960","1970","1980","1990","2000","2010"];
 
 var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic','total_pop','hispanic','non_hispanic','year'];
@@ -439,6 +421,7 @@ $(document).ready(function () {
                     var cursorCoordinates = map.mouseEventToLayerPoint(event);
                     var layerPoint = cursorCoordinates.x;
                     var OverclipX=(layerPoint>clipX) ? true:false;
+                    
                     if (OverclipX===true){
                         
                         layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8,12);
@@ -449,20 +432,20 @@ $(document).ready(function () {
                     }
 
                     if (data.year==parseInt(layerDecade)){
+                        if ( $('#pieChart').children().length > 0 ) {
+                            $('#pieChart').empty();
+                        }
+                         
                         console.log("------")
                         console.log("CartoDB_ID:"+data.cartodb_id)
                         console.log("Hispanic%:"+(data.pct_hispanic)+"%")
                          console.log("Decade:"+layerDecade)
-                        if (!$("#popUp").length){
-                            var popUp=$("<div/>",{id:"popUp"})
-                            $("#popUpHolder").append(popUp)    
-                        }
-                        $("#popUp").css({"left":event.clientX+5,"top":event.clientY+5});
-                        console.log(data)
-                        pieConfig.data.content[0].value = data.hispanic;
-                        pieConfig.data.content[1].value = data.non_hispanic;
+                        $("#popUp").css({"left":event.clientX+5,"top":event.clientY+5,"visibility": "visible"});
+                        pieChartData["0"].value = data.hispanic;
+                        pieChartData["1"].value = data.non_hispanic;
+                        pieConfig.header.subtitle.text = data.total_pop;
                         var pie = new d3pie("pieChart",pieConfig);
-                        $("#popUp").html(pie); // doesnt work
+                        //$("#popUp").html(pie); // doesnt work
                      //http://d3pie.org/#quickStart          
                     }  
                 });
@@ -488,7 +471,7 @@ function extractLayerDecades(){
 function clip() {
     
     if ($("#popUp")){
-        $("#popUp").remove()
+        $("#popUp").css("visibility","hidden");
     }
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize());

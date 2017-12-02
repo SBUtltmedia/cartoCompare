@@ -189,4 +189,5 @@ ul {
     height: auto;
     width:auto;
     z-index:999999999999999999999999;
+    visibility: hidden;
 }
