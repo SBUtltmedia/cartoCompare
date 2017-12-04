@@ -156,9 +156,10 @@ function addPointSublayers(){
      decades.forEach(function(decade){
        // console.log(decade+" 5")
         layers["Points"][decade]={
-            interactivity:'name, properties, cartodb_id, options',
+            
                 cartocss:"#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
-              sql:"SELECT * FROM latinos.comparisonmappoints where decade='"+decade+"'"
+              sql:"SELECT * FROM latinos.comparisonmappoints where decade='"+decade+"'",
+            interactivity:'name, properties, cartodb_id, options, captions'
             };
  
     })
@@ -383,6 +384,8 @@ $(document).ready(function () {
                                                                                     //,"visibility": "visible"
                 $("#playerDiv").css({"left":event.clientX+5,"top":event.clientY+5});
                 $("#playerDiv").css({"visibility": "visible"});
+                $("#caption").css({"top":event.clientY-5, "height":"5000px"});
+                $("#caption").css({"visibility": "visible"});
                 
                 //openInfowindow(subArray[currentLayer],data.properties.ge);
             });
