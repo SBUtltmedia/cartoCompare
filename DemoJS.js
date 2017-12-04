@@ -88,7 +88,7 @@ var pieConfig= {
 	},
 	"effects": {
 		"load": {
-			"speed": 500
+			"speed": 1000
 		},
 		"pullOutSegmentOnClick": {
 			"effect": "none",
@@ -158,7 +158,7 @@ function addPointSublayers(){
         layers["Points"][decade]={
             interactivity:'name, properties, cartodb_id, options',
                 cartocss:"#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
-              sql:"SELECT * FROM latinos.comparisonmappoints where decade='"+decade+"'",
+              sql:"SELECT * FROM latinos.comparisonmappoints where decade='"+decade+"'"
             };
  
     })
@@ -171,7 +171,6 @@ function limitPoints(QueryStringArr){//
     });    
     CartoLayerSource[sublayers][1][sql] = newSQL;
 } // CONCATENATE EACH KEYWORD IN QUERYSTRING INTO SQL
-
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -254,7 +253,6 @@ function pointClicked(data) {
     }
     return YT_id;
 }
-
 
 function onPlayerReady(event) {
     event.target.playVideo();
@@ -380,7 +378,12 @@ $(document).ready(function () {
             currentLayer.setInteraction(true)
             currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                 pointClicked(JSON.parse(data.properties));
-                console.log(data.properties);
+                console.log(data);
+                
+                                                                                    //,"visibility": "visible"
+                $("#playerDiv").css({"left":event.clientX+5,"top":event.clientY+5});
+                $("#playerDiv").css({"visibility": "visible"});
+                
                 //openInfowindow(subArray[currentLayer],data.properties.ge);
             });
         }) 
@@ -452,6 +455,10 @@ function clip() {
     
     if ($("#popUp")){
         $("#popUp").css("visibility","hidden");
+    }
+    
+    if ($("#playerDiv")){
+        $("#playerDiv").css("visibility","hidden");
     }
     var nw = map.containerPointToLayerPoint([0, 0])
         , se = map.containerPointToLayerPoint(map.getSize());
