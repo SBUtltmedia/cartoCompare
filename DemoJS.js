@@ -203,6 +203,10 @@ $(document).ready(function () {
                 $("#playerDiv").css({
                     "visibility": "visible"
                 });
+                $("#playerHolder").css({
+                    "visibility": "visible"
+                });
+                
                 $("#caption").css({
                     "top": event.clientY - 25,
                     "left": event.clientX + 5,
@@ -290,9 +294,11 @@ function clip() {
         $("#popUp").css("visibility", "hidden");
     }
 
-    if ($("#playerDiv")) {
+    if ($("#playerHolder")) {
+        $("#playerHolder").css("visibility", "hidden");
         $("#playerDiv").css("visibility", "hidden");
         $("#caption").css("visibility", "hidden");
+        console.log("hidden 256")
     }
     var nw = map.containerPointToLayerPoint([0, 0]),
         se = map.containerPointToLayerPoint(map.getSize());

@@ -149,7 +149,7 @@ ul {
     bottom:25px;
     left:40%;
     z-index:9999999999999999;
-    visibility: hidden;
+    /**visibility: hidden;**/
 }
 
 #popUp{
