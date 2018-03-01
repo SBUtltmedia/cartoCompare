@@ -1,5 +1,31 @@
 addPointSublayers();
 
+var charts = {};
+
+
+ var popFactory= {
+    popUpCount:0,
+    
+   newPopUp: function(){
+      this.popUpCount++;
+       var popUp =$('<div/>');
+                    
+                    popUp.attr('id','popUp'+this.popUpCount)
+                     popUp.attr('class','popUp')
+               var pieChart =$('<div/>');
+                    
+                    pieChart.attr('id','pieChart'+this.popUpCount)            
+                    popUp.append(pieChart);
+                    $('#popUpHolder').append(popUp);
+       var num = this.popUpCount;
+       console.log(num); 
+       charts[popUp.attr('id')] = false;
+   return this.popUpCount;
+   }   
+}
+
+ 
+ 
 function extractYear(sql) {
     return sql.split("_")[1];
 }
@@ -93,6 +119,8 @@ $(document).ready(function () {
         }
     });
 
+    
+    
     function layerLoaded(layer) {}
 
     function twoRadioForms(S) {
@@ -248,15 +276,30 @@ $(document).ready(function () {
                     }
 
                     if (data.year == parseInt(layerDecade)) {
-                        if ($('#pieChart').children().length > 0) {
-                            $('#pieChart').empty();
-                        }
-
+                        console.log(charts)
+                    
+//                      for (child in $('#popUpHolder').children()) {
+//                            var ID = child.attr('id');
+//                          console.log(ID);
+//                            if (charts[id] ==false){
+//                                $(ID).remove();
+//                                delete charts[id];
+//                            }
+//                      }
+//                                                        
+                        
+//                        if ($('#popUpHolder').children().length > 0) {
+//                            $('#popUpHolder').empty();                     //commenting this out creates multiple pie charts
+//                        }
+//                        
+//            
+//                    
                         console.log("------")
                         console.log("CartoDB_ID:" + data.cartodb_id)
                         console.log("Hispanic%:" + (data.pct_hispanic) + "%")
                         console.log("Decade:" + layerDecade)
-                        $("#popUp").css({
+                        var popCount = popFactory.newPopUp();
+                        $("#popUp"+popCount).css({
                             "left": event.clientX + 5,
                             "top": event.clientY + 5,
                             "visibility": "visible"
@@ -264,7 +307,10 @@ $(document).ready(function () {
                         pieChartData["0"].value = data.hispanic;
                         pieChartData["1"].value = data.non_hispanic;
                         pieConfig.header.subtitle.text = data.total_pop;
-                        var pie = new d3pie("pieChart", pieConfig);
+                        
+                    
+                    
+                        var pie = new d3pie("pieChart"+popCount, pieConfig);
                         //$("#popUp").html(pie); // doesnt work
                         //http://d3pie.org/#quickStart          
                     }

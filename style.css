@@ -152,7 +152,7 @@ ul {
     /**visibility: hidden;**/
 }
 
-#popUp{
+.popUp{
     position: absolute;
     z-index: 10;
     box-shadow: rgba(0, 0, 0, .2) 0 0 4px 2px;
