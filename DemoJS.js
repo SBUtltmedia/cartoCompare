@@ -1,60 +1,67 @@
 addPointSublayers();
-
-var charts = {};
-
-
+var pinnedCharts = {};
 var popFactory = {
-    popUpCount: 0,
-
-    newPopUp: function () {
+    popUpCount: 0
+    , newPopUp: function (areaname) {
         this.popUpCount++;
         var popUp = $('<div/>');
-
         popUp.attr('id', 'popUp' + this.popUpCount)
-        popUp.attr('class', 'popUp')
+        popUp.attr('class', 'popUp');
+        var textDiv = $('<div/>');
+        textDiv.attr('id','titleText');
+        textDiv.text(areaname);
         var pieChart = $('<div>');
-        
-//        var pinDiv = $('<div>');
-//        var pin = $('<svg>');
-//        pin.attr('width','60');
-//        pin.attr('height','60');
-//        //pinDiv.attr('visibility','visible');
-//        var scl = $('<g/>');
-//        var path0=$('<path/>'),path1=$('<path/>');
-//        path0.attr('d',PinSVG.path0);
-//        path1.attr('d',PinSVG.path1);
-//        scl.attr('transform','scale(.03)');
-//        scl.append(path0);
-//        scl.append(path1);
-//        pin.append(scl);
-//        pinDiv.append(pin);
-//    
-        
-        
         var SVGhtml = $(SVGstr);
-        console.log(SVGhtml);
+        SVGhtml.attr("id","pin_"+  this.popUpCount);
+        // console.log(SVGhtml);
         pieChart.attr('id', 'pieChart' + this.popUpCount)
+        popUp.append(textDiv)
         popUp.append(pieChart);
         popUp.append(SVGhtml);
-        SVGhtml.on("click",function(){
-            
-           $(this).toggleClass("pinned")
-            console.log("gdf")
-            
-            //$( "#mydiv" ).hasClass( "quux" )
-            
+        SVGhtml.on("click", function (evt) {
+            console.log($(evt.target));
+                        if ($(this).hasClass('pinned')) {
+                console.log(popUp.attr('id'))
+                popUp.remove();
+            }
+            $(this).toggleClass("pinned");
         })
-        
-        
         $('#popUpHolder').append(popUp);
         var num = this.popUpCount;
-        console.log(num);
-        charts[popUp.attr('id')] = false;
+        //popUp.css("width",251);
+        console.log(popUp.height()+" + + "+popUp.width());
+        dragElement(document.getElementById(popUp.attr('id')));
         return this.popUpCount;
     }
 }
 
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    elmnt.onmousedown = dragMouseDown;
 
+  function dragMouseDown(e) {
+    e = e || window.event;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
 
 
 
@@ -68,12 +75,10 @@ function addPointSublayers() {
     decades.forEach(function (decade) {
         // console.log(decade+" 5")
         layers["Points"][decade] = {
-
-            cartocss: "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
-            sql: "SELECT * FROM latinos.comparisonmappoints where decade='" + decade + "'",
-            interactivity: 'name, properties, cartodb_id, options, captions'
+            cartocss: "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}"
+            , sql: "SELECT * FROM latinos.comparisonmappoints where decade='" + decade + "'"
+            , interactivity: 'name, properties, cartodb_id, options, captions'
         };
-
     })
 }
 
@@ -84,45 +89,42 @@ function limitPoints(QueryStringArr) { //
     });
     CartoLayerSource[sublayers][1][sql] = newSQL;
 } // CONCATENATE EACH KEYWORD IN QUERYSTRING INTO SQL
-
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)")
+        , results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
 // query string: ?foo=lorem&bar=&baz  //var foo = getParameterByName('foo'); -> "lorem" //have the query string to have like: ?control=TagOption1&control
-
 function resetHighlight(e) {} //callback
 function zoomToFeature(e) {} //callback
-
 function pointClicked(data) {
     console.log(data);
     YT_id = data.youtube_id;
     vidSec = data.video_second;
     if (!player) {
         player = new YT.Player('playerDiv', {
-            height: '236.25',
-            width: '420',
-            videoId: YT_id,
-            playerVars: {
-                autoplay: 0,
-                start: vidSec,
-                rel: 0,
-            },
-            events: {
-                'onReady': onPlayerReady,
-            }
+            height: '236.25'
+            , width: '420'
+            , videoId: YT_id
+            , playerVars: {
+                autoplay: 0
+                , start: vidSec
+                , rel: 0
+            , }
+            , events: {
+                'onReady': onPlayerReady
+            , }
         });
-    } else {
+    }
+    else {
         console.log(player, YT_id, vidSec, data)
         if (player.loadVideoById) player.loadVideoById({
-            videoId: YT_id,
-            startSeconds: vidSec
+            videoId: YT_id
+            , startSeconds: vidSec
         });
     }
     return YT_id;
@@ -131,28 +133,23 @@ function pointClicked(data) {
 function onPlayerReady(event) {
     event.target.playVideo();
 }
-
 $(document).ready(function () {
-
     console.log(layers["Points"])
     keyword = getParameterByName("keyword")
-
     loadBaseLayers()
     $("#compareSlider").draggable({
-        axis: 'x',
-        containment: "parent",
-        start: function () {
+        axis: 'x'
+        , containment: "parent"
+        , start: function () {
             clip()
-        },
-        drag: function () {
+        }
+        , drag: function () {
             clip()
-        },
-        stop: function () {
+        }
+        , stop: function () {
             clip()
         }
     });
-
-
 
     function layerLoaded(layer) {}
 
@@ -160,14 +157,14 @@ $(document).ready(function () {
         var demo = Object.keys(layers["demographics"])
         for (i in demo) {
             //console.log(demo[i])
-            var li = $('<li/>'),
-                input = $('<input/>'),
-                label = $('<label/>');
+            var li = $('<li/>')
+                , input = $('<input/>')
+                , label = $('<label/>');
             li.attr("class", "layer");
             input.attr({
-                "type": "radio",
-                "id": demo[i],
-                "name": S
+                "type": "radio"
+                , "id": demo[i]
+                , "name": S
             });
             label.attr("for", demo[i]);
             label.html(demo[i])
@@ -194,9 +191,9 @@ $(document).ready(function () {
 
     function loadBaseLayers() {
         map = L.map('map', {
-            zoomControl: true,
-            center: [40.789142, -73.134961],
-            zoom: 9
+            zoomControl: true
+            , center: [40.789142, -73.134961]
+            , zoom: 9
         });
         var basemap = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png').addTo(map);
         $('#map').append(legend.render().el);
@@ -210,9 +207,9 @@ $(document).ready(function () {
     function loadLabelLayers() {
         Object.keys(layerSides).forEach(function (currentLayer) {
             layerSides[currentLayer].createSubLayer({
-                type: "http",
-                urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
-                subdomains: ["a", "b", "c"]
+                type: "http"
+                , urlTemplate: "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
+                , subdomains: ["a", "b", "c"]
             });
         })
         addInteractivity();
@@ -227,9 +224,8 @@ $(document).ready(function () {
             });
         });
         loadSubLayers()
-        // window.setTimeout(addInteractivity(), 500);
+            // window.setTimeout(addInteractivity(), 500);
     }
-
     map.on('move', clip);
 
     function clearandReload() {
@@ -255,11 +251,10 @@ $(document).ready(function () {
             currentLayer.on('featureClick', function (event, latlng, pos, data, layerIndex) {
                 pointClicked(JSON.parse(data.properties));
                 console.log(data);
-
                 //,"visibility": "visible"
                 $("#playerDiv").css({
-                    "left": event.clientX + 5,
-                    "top": event.clientY + 5
+                    "left": event.clientX + 5
+                    , "top": event.clientY + 5
                 });
                 $("#playerDiv").css({
                     "visibility": "visible"
@@ -267,18 +262,16 @@ $(document).ready(function () {
                 $("#playerHolder").css({
                     "visibility": "visible"
                 });
-
                 $("#caption").css({
-                    "top": event.clientY - 25,
-                    "left": event.clientX + 5,
-                    "height": "20px",
-                    "width": "auto"
+                    "top": event.clientY - 25
+                    , "left": event.clientX + 5
+                    , "height": "20px"
+                    , "width": "auto"
                 });
                 $("#caption").text(data.captions);
                 $("#caption").css({
                     "visibility": "visible"
                 });
-
                 //openInfowindow(subArray[currentLayer],data.properties.ge);
             });
         })
@@ -299,18 +292,14 @@ $(document).ready(function () {
                     var cursorCoordinates = map.mouseEventToLayerPoint(event);
                     var layerPoint = cursorCoordinates.x;
                     var OverclipX = (layerPoint > clipX) ? true : false;
-
                     if (OverclipX === true) {
-
                         layerDecade = layerSides["rightLayer"].layers[0].options.sql.substring(8, 12);
-                    } else {
-
+                    }
+                    else {
                         layerDecade = layerSides["leftLayer"].layers[0].options.sql.substring(8, 12);
                     }
-
                     if (data.year == parseInt(layerDecade)) {
-                        console.log(charts)
-
+                        //console.log(charts)
                         //                      for (child in $('#popUpHolder').children()) {
                         //                            var ID = child.attr('id');
                         //                          console.log(ID);
@@ -320,27 +309,39 @@ $(document).ready(function () {
                         //                            }
                         //                      }
                         //                                                        
-
                         if ($('#popUpHolder').children().length > 0) {
-                            $('#popUpHolder').empty(); //commenting this out creates multiple pie charts
+                            
+                            var popUpChildren= $('#popUpHolder').children()
+                            
+                            console.log(popUpChildren.length)
+                            var count =popUpChildren.length;
+                            while (i = count--) {
+                             
+                               var pin = $(popUpChildren[i-1]).find("svg")
+                                console.log(i)
+                                console.log($(popUpChildren[i-1]).find("svg"))
+                                if (!$(pin).hasClass('pinned')) {
+                                    $(popUpChildren[i-1]).remove();
+                            
+                                }
+                            }
+                            //$('#popUpHolder').empty(); //commenting this out creates multiple pie charts
                         }
-                   
-                        console.log("------")
-                        console.log("CartoDB_ID:" + data.cartodb_id)
-                        console.log("Hispanic%:" + (data.pct_hispanic) + "%")
-                        console.log("Decade:" + layerDecade)
-                        var popCount = popFactory.newPopUp();
+                        //                   
+                        //                        console.log("------")
+                        //                        console.log("CartoDB_ID:" + data.cartodb_id)
+                        //                        console.log("Hispanic%:" + (data.pct_hispanic) + "%")
+                        //                        console.log("Decade:" + layerDecade)
+                        var popCount = popFactory.newPopUp(data.areaname);
+                        //string param is data.censuspolygon
                         $("#popUp" + popCount).css({
-                            "left": event.clientX + 5,
-                            "top": event.clientY + 5,
-                            "visibility": "visible"
+                            "left": event.clientX + 5
+                            , "top": event.clientY + 5
+                            , "visibility": "visible"
                         });
                         pieChartData["0"].value = data.hispanic;
                         pieChartData["1"].value = data.non_hispanic;
                         pieConfig.header.subtitle.text = data.total_pop;
-
-
-
                         var pie = new d3pie("pieChart" + popCount, pieConfig);
                         //$("#popUp").html(pie); // doesnt work
                         //http://d3pie.org/#quickStart          
@@ -351,7 +352,6 @@ $(document).ready(function () {
         loadLabelLayers();
         window.setTimeout(clip, 500);
     }
-
 });
 
 function extractLayerDecades() {
@@ -361,26 +361,20 @@ function extractLayerDecades() {
     $.each($("input[name='R']:checked"), function (year) {
         IDsHover["R"] = year
     });
-
-
 }
 
 function clip() {
-
     if ($("#popUp")) {
         $("#popUp").css("visibility", "hidden");
     }
-
     if ($("#playerHolder")) {
         $("#playerHolder").css("visibility", "hidden");
         $("#playerDiv").css("visibility", "hidden");
         $("#caption").css("visibility", "hidden");
         console.log("hidden 256")
     }
-    var nw = map.containerPointToLayerPoint([0, 0]),
-        se = map.containerPointToLayerPoint(map.getSize());
-
-
+    var nw = map.containerPointToLayerPoint([0, 0])
+        , se = map.containerPointToLayerPoint(map.getSize());
     clipX = nw.x + (se.x - nw.x) * getSliderValue();
     var windowH = $(document).height();
     var windowW = $(document).width();
