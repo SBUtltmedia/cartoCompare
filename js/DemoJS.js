@@ -3,6 +3,10 @@ It will be the professors work to do that and edit the year it can be seen in
 The code will take these new values and place them accordingly*/
 
 //https://carto.com/developers/carto-js/guides/upgrade-considerations/
+////This is where you implement the SQL
+//const Pop1960 = new carto.source.SQL(layers["demographics"]["1960"]["sql"]);
+//client in data
+
 // Grabs the year from
 function extractYear(sql) {
   return sql.split("_")[1];

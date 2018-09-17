@@ -26,6 +26,13 @@ var CartoLayerSource = {
   sublayers: []
 };
 
+// // define client
+// const client = new carto.Client({
+//     apiKey: '3e12024aff2f3326a1db97e6c877e79e02bd8ced',
+//     username: 'latinos',
+//     serverUrl:'//app2.gss.stonybrook.edu/user/latinos'
+// });
+
 var pieChartData = [{
   "label": "Hispanic",
   "value": 100,
