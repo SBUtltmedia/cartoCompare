@@ -43,3 +43,8 @@ var tubeFactory = {
     }
   }
 }
+
+// When the video is ready, play it
+function onPlayerReady(event) {
+  event.target.playVideo();
+}
