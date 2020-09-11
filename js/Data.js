@@ -11,7 +11,7 @@ var IDsHover = {"L" : null, "R" : null};
 
 var CartoLayerSource = {
   user_name : "latinos",
-  api_key : "a5638ec89e3547771e932d328bb95ed7667e27e5",
+  api_key : "default_public",
   type : 'cartodb',
   maps_api_template : "//data.gss.stonybrook.edu/user/{user}",
   sql_api_template : "//data.gss.stonybrook.edu/user/{user}",
