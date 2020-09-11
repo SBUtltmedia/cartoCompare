@@ -4,26 +4,18 @@ var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 var map;
-var layerSides = {
-  "rightLayer": {},
-  "leftLayer": {}
-};
+var layerSides = {"rightLayer" : {}, "leftLayer" : {}};
 var clipX;
-var layerShortHand = {
-  "rightLayer": "R",
-  "leftLayer": "L"
-}
-var IDsHover = {
-  "L": null,
-  "R": null
-};
+var layerShortHand = {"rightLayer" : "R", "leftLayer" : "L"};
+var IDsHover = {"L" : null, "R" : null};
+
 var CartoLayerSource = {
-  user_name: "latinos",
-  api_key: "3e12024aff2f3326a1db97e6c877e79e02bd8ced",
-  type: 'cartodb',
-  maps_api_template: "//app2.gss.stonybrook.edu/user/{user}",
-  sql_api_template: "//app2.gss.stonybrook.edu/user/{user}",
-  sublayers: []
+  user_name : "latinos",
+  api_key : "a5638ec89e3547771e932d328bb95ed7667e27e5",
+  type : 'cartodb',
+  maps_api_template : "//data.gss.stonybrook.edu/user/{user}",
+  sql_api_template : "//data.gss.stonybrook.edu/user/{user}",
+  sublayers : []
 };
 
 // // define client
@@ -33,111 +25,61 @@ var CartoLayerSource = {
 //     serverUrl:'//app2.gss.stonybrook.edu/user/latinos'
 // });
 
-var pieChartData = [{
-  "label": "Hispanic",
-  "value": 100,
-  "color": "#c18ce6"
-}, {
-  "label": "Non-Hispanic",
-  "value": 100,
-  "color": "#dbdbdb"
-}];
+var pieChartData = [
+  {"label" : "Hispanic", "value" : 100, "color" : "#c18ce6"},
+  {"label" : "Non-Hispanic", "value" : 100, "color" : "#dbdbdb"}
+];
 var tP = 33333;
 
 var pieConfig = {
-  "header": {
-    "title": {
-      "text": "Total Population",
-      "fontSize": 8
-    },
-    "subtitle": {
-      "text": tP,
-      "color": "#000",
-      "fontSize": 12,
-      "font": "open sans"
-    },
-    "location": "pie-center",
-    "titleSubtitlePadding": 2.5
+  "header" : {
+    "title" : {"text" : "Total Population", "fontSize" : 8},
+    "subtitle" :
+        {"text" : tP, "color" : "#000", "fontSize" : 12, "font" : "open sans"},
+    "location" : "pie-center",
+    "titleSubtitlePadding" : 2.5
   },
 
-  "size": {
-    "canvasHeight": 225,
-    "canvasWidth": 345,
-    "pieInnerRadius": "65%",
-    "pieOuterRadius": "80%"
+  "size" : {
+    "canvasHeight" : 225,
+    "canvasWidth" : 345,
+    "pieInnerRadius" : "65%",
+    "pieOuterRadius" : "80%"
   },
-  "data": {
-    "sortOrder": "label-desc",
-    "content": pieChartData
+  "data" : {"sortOrder" : "label-desc", "content" : pieChartData},
+  "labels" : {
+    "outer" : {"format" : "label-value2", "pieDistance" : 20},
+    "mainLabel" : {"fontSize" : 10},
+    "percentage" : {"color" : "#000", "fontSize" : 11, "decimalPlaces" : 0},
+    "value" : {"color" : "#000", "fontSize" : 11},
+    "lines" : {"enabled" : true, "color" : "#777777"},
+    "truncation" : {"enabled" : true}
   },
-  "labels": {
-    "outer": {
-      "format": "label-value2",
-      "pieDistance": 20
-    },
-    "mainLabel": {
-      "fontSize": 10
-    },
-    "percentage": {
-      "color": "#000",
-      "fontSize": 11,
-      "decimalPlaces": 0
-    },
-    "value": {
-      "color": "#000",
-      "fontSize": 11
-    },
-    "lines": {
-      "enabled": true,
-      "color": "#777777"
-    },
-    "truncation": {
-      "enabled": true
-    }
+  "effects" : {
+    "load" : {"speed" : 750},
+    "pullOutSegmentOnClick" : {"effect" : "none", "speed" : 200, "size" : 8}
   },
-  "effects": {
-    "load": {
-      "speed": 750
-    },
-    "pullOutSegmentOnClick": {
-      "effect": "none",
-      "speed": 200,
-      "size": 8
-    }
-  },
-  "misc": {
-    "colors": {
-      "segmentStroke": "#000000"
-    }
-  }
+  "misc" : {"colors" : {"segmentStroke" : "#000000"}}
 };
 
-var decades = ["1960", "1970", "1980", "1990", "2000", "2010"];
+var decades = [ "1960", "1970", "1980", "1990", "2000", "2010" ];
 
-var geoInteractivity = ['cartodb_id', 'areaname', 'pct_hispanic', 'total_pop', 'hispanic', 'non_hispanic', 'year'];
+var geoInteractivity = [
+  'cartodb_id', 'areaname', 'pct_hispanic', 'total_pop', 'hispanic',
+  'non_hispanic', 'year'
+];
 
 var legend = new cdb.geo.ui.Legend({
-  type: "custom",
-  title: "Percent of Latino Population",
-  data: [{
-    name: "80% or more",
-    value: "#810f7c"
-  }, {
-    name: "40% - 80%",
-    value: "#8856a7"
-  }, {
-    name: "20% - 40%",
-    value: "#8c96c6"
-  }, {
-    name: "10% - 20%",
-    value: "#9ebcda"
-  }, {
-    name: " 5% - 10%",
-    value: "#bfd3e6"
-  }, {
-    name: "5% or less",
-    value: "#edf8fb"
-  }]
+  type : "custom",
+  title : "Percent of Latino Population",
+  data : [
+    {name : "80% or more", value : "#810f7c"},
+    {name : "40% - 80%", value : "#8856a7"},
+    {name : "20% - 40%", value : "#8c96c6"},
+    {name : "10% - 20%", value : "#9ebcda"},
+    {name : " 5% - 10%", value : "#bfd3e6"},
+    {name : "5% or less", value : "#edf8fb"}
+  ]
 });
 
 var geojson;
@@ -155,27 +97,16 @@ function addPointCSS() {
 }
 
 var legend = new cdb.geo.ui.Legend({
-  type: "custom",
-  title: "Percent of Latino Population",
-  data: [{
-    name: "80% or more",
-    value: "#810f7c"
-  }, {
-    name: "40% - 80%",
-    value: "#8856a7"
-  }, {
-    name: "20% - 40%",
-    value: "#8c96c6"
-  }, {
-    name: "10% - 20%",
-    value: "#9ebcda"
-  }, {
-    name: " 5% - 10%",
-    value: "#bfd3e6"
-  }, {
-    name: "5% or less",
-    value: "#edf8fb"
-  }]
+  type : "custom",
+  title : "Percent of Latino Population",
+  data : [
+    {name : "80% or more", value : "#810f7c"},
+    {name : "40% - 80%", value : "#8856a7"},
+    {name : "20% - 40%", value : "#8c96c6"},
+    {name : "10% - 20%", value : "#9ebcda"},
+    {name : " 5% - 10%", value : "#bfd3e6"},
+    {name : "5% or less", value : "#edf8fb"}
+  ]
 });
 
 var geojson;
@@ -185,39 +116,45 @@ var vidPlayer;
 var keyword;
 
 var layers = {
-  "demographics": {
-    '1960': {
-      sql: "SELECT '1960' as year, latinos.tract_1960.cartodb_id, latinos.tract_1960.gisjoin, latinos.tract_1960.the_geom, latinos.tract_1960.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1960 INNER JOIN latinos.census_1960_tract_li ON latinos.tract_1960.gisjoin = latinos.census_1960_tract_li.gisjoin WHERE ca4001 != 0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+  "demographics" : {
+    '1960' : {
+      sql :
+          "SELECT '1960' as year, g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, ca4001 as total_pop, ca7001 as hispanic, ca4001 - ca7001 as non_hispanic, round(ca7001 * 1.0 / ca4001 * 100, 1) as pct_hispanic, areaname FROM tract_1960 g INNER JOIN census_1960_tract_li t ON g.gisjoin = t.gisjoin WHERE ca4001 != 0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     },
-    '1970': {
-      sql: "SELECT '1970' as year, latinos.tract_1970.cartodb_id, latinos.tract_1970.gisjoin, latinos.tract_1970.the_geom, latinos.tract_1970.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM latinos.tract_1970 INNER JOIN latinos.census_1970_tract_li ON latinos.tract_1970.gisjoin = latinos.census_1970_tract_li.gisjoin WHERE C1I001 != 0 AND C11001 >= 0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+    '1970' : {
+      sql :
+          "SELECT '1970' as year, g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, C1I001 as total_pop, C11001 as hispanic, C1I001 - C11001 as non_hispanic, round(C11001 * 1.0 / C1I001 * 100, 1) as pct_hispanic, areaname FROM tract_1970 g INNER JOIN census_1970_tract_li t ON g.gisjoin = t.gisjoin WHERE C1I001 != 0 AND C11001 >= 0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     },
-    '1980': {
-      sql: "SELECT '1980' as year,  latinos.tract_1980.cartodb_id, latinos.tract_1980.gisjoin, latinos.tract_1980.the_geom, latinos.tract_1980.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1980 INNER JOIN latinos.census_1980_tract_li ON latinos.tract_1980.gisjoin = latinos.census_1980_tract_li.gisjoin WHERE C9F001 != 0 AND C9E001 >=0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+    '1980' : {
+      sql :
+          "SELECT '1980' as year,  g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, C9E001 +C9F001 as total_pop, C9F001 as hispanic, C9E001 as non_hispanic, round(C9F001 *1.0 / (C9E001+C9F001) *100, 1) as pct_hispanic, areaname FROM tract_1980 g INNER JOIN census_1980_tract_li t ON g.gisjoin = t.gisjoin WHERE C9F001 != 0 AND C9E001 >=0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     },
-    '1990': {
-      sql: "SELECT '1990' as year,  latinos.tract_1990.cartodb_id, latinos.tract_1990.gisjoin, latinos.tract_1990.the_geom, latinos.tract_1990.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, areaname FROM latinos.tract_1990 INNER JOIN latinos.census_1990_tract_li_update ON latinos.tract_1990.gisjoin = latinos.census_1990_tract_li_update.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+    '1990' : {
+      sql :
+          "SELECT '1990' as year,  g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, EU1001  +EU0001 as total_pop, EU0001 as hispanic, EU1001 as non_hispanic, round(EU0001  *1.0 / (EU0001 +EU1001) *100, 1) as pct_hispanic, state || ', ' || county || ', ' || anpsadpi as areaname FROM tract_1990 g INNER JOIN census_1990_tract_li t ON g.gisjoin = t.gisjoin WHERE (EU0001+EU1001)!=0 AND EU0001*1.0 >=0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     },
-    '2000': {
-      sql: "SELECT '2000' as year,  latinos.tract_2000.cartodb_id, latinos.tract_2000.gisjoin, latinos.tract_2000.the_geom, latinos.tract_2000.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, latinos.census_2000_tract_li_update.areaname as areaname FROM latinos.tract_2000 INNER JOIN latinos.census_2000_tract_li_update ON latinos.tract_2000.gisjoin = latinos.census_2000_tract_li_update.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+    '2000' : {
+      sql :
+          "SELECT '2000' as year,  g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, FMC001 +FMC002 as total_pop, FMC001 as hispanic, FMC002 as non_hispanic, round(FMC001 *1.0 / (FMC001+FMC002) *100, 1) as pct_hispanic, state || ', ' || county || ', ' || name as areaname FROM tract_2000 g INNER JOIN census_2000_tract_li t ON g.gisjoin = t.gisjoin WHERE (FMC001+FMC002)!=0 AND FMC001*1.0>=0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     },
-    '2010': {
-      sql: "SELECT '2010' as year,  latinos.tract_2010.cartodb_id, latinos.tract_2010.gisjoin, latinos.tract_2010.the_geom, latinos.tract_2010.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, latinos.census_2010_tract_li_update.areaname as areaname FROM latinos.tract_2010 INNER JOIN latinos.census_2010_tract_li_update ON latinos.tract_2010.gisjoin = latinos.census_2010_tract_li_update.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0",
-      cartocss: addGeoCSS(),
-      interactivity: geoInteractivity
+    '2010' : {
+      sql :
+          "SELECT '2010' as year,  g.cartodb_id, g.gisjoin, g.the_geom, g.the_geom_webmercator, IC2001 as total_pop, IC2003 as hispanic, IC2002 as non_hispanic, round(IC2003 *1.0 / IC2001 *100, 1) as pct_hispanic, state || ', ' || county || ', ' || name as areaname FROM tract_2010 g INNER JOIN census_2010_tract_li t ON g.gisjoin = t.gisjoin WHERE IC2001!=0 AND (IC2002*1.0)>=0",
+      cartocss : addGeoCSS(),
+      interactivity : geoInteractivity
     }
   },
-  "Points": {
+  "Points" : {
 
   }
 }
@@ -226,7 +163,8 @@ var xCross = `<svg width="15px" height ="15px">
     <line x1="0" y1="0" x2="15px" y2="15px" style="stroke:#ff0000; stroke-width:1.5"></line>
     <line x1="0" y1="15px" x2="15px" y2="0" style="stroke:#ff0000; stroke-width:1.5"></line>
 </svg>`;
-var SVGstr = `<svg width="20px" height ="20px" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+var SVGstr =
+    `<svg width="20px" height ="20px" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 8 8" style="enable-background:new 0 0 0 0;" xml:space="preserve">
     <g transform="scale(.03)" class="green">
 <path d="M160.7,204.1c-37.6-37.7-75-75-112.5-112.6c9.7-10,21.9-16.4,35.6-20.1c12-3.2,24.1-3.1,36.2-0.7c4.2,0.8,6.4-0.2,8.7-3.4
@@ -247,87 +185,89 @@ var holdID = "";
 // Varried levels to restrict the Lon/Lat to to keep things contained to LI
 // 9: L.latLngBounds([42.294006, -69.403752], [39.391607, -76.445206]),
 var mapBounds = {
-  10: L.latLngBounds([41.394543, -70.644156], [40.370698, -75.306929]),
-  11: L.latLngBounds([41.3, -71.1], [40.5, -74.65]),
-  12: L.latLngBounds([41.3, -71.5], [40.5, -74.25])
+  10 : L.latLngBounds([ 41.394543, -70.644156 ], [ 40.370698, -75.306929 ]),
+  11 : L.latLngBounds([ 41.3, -71.1 ], [ 40.5, -74.65 ]),
+  12 : L.latLngBounds([ 41.3, -71.5 ], [ 40.5, -74.25 ])
 };
 var zoomChange = 0;
 var eventHold;
 
 // Creates a base for the population piechart and implements each part
-var popFactory = {
+var popFactory =
+    {
 
-  popUpCount: 0,
-  newPopUp: function(areaname) {
-    this.popUpCount++;
-    var popUp = $('<div/>');
-    var textDiv = $('<div/>');
-    var pieChart = $('<div>');
-    var crossSVG = $(xCross);
-    var pinSVG = $(SVGstr);
+      popUpCount : 0,
+      newPopUp : function(areaname) {
+        this.popUpCount++;
+        var popUp = $('<div/>');
+        var textDiv = $('<div/>');
+        var pieChart = $('<div>');
+        var crossSVG = $(xCross);
+        var pinSVG = $(SVGstr);
 
-    // Appends each part to the base
-    popUp.append(crossSVG);
-    popUp.append(textDiv)
-    popUp.append(pieChart);
-    popUp.append(pinSVG);
+        // Appends each part to the base
+        popUp.append(crossSVG);
+        popUp.append(textDiv)
+        popUp.append(pieChart);
+        popUp.append(pinSVG);
 
-    // Edits to the attributes and css of the parts
+        // Edits to the attributes and css of the parts
 
-    //---------------------\\
-    textDiv.attr('id', 'titleText');
-    textDiv.css('text-align', 'center');
-    textDiv.text(areaname);
+        //---------------------\\
+        textDiv.attr('id', 'titleText');
+        textDiv.css('text-align', 'center');
+        textDiv.text(areaname);
 
-    popUp.attr('id', 'popUp' + this.popUpCount)
-    popUp.attr('class', 'popUp');
-    popUp.css('cursor','cell')
+        popUp.attr('id', 'popUp' + this.popUpCount)
+        popUp.attr('class', 'popUp');
+        popUp.css('cursor', 'cell')
 
-    pinSVG.attr("id", "pin_" + this.popUpCount);
+        pinSVG.attr("id", "pin_" + this.popUpCount);
 
-    pieChart.attr('id', 'pieChart' + this.popUpCount)
-    pieChart.css("margin", "0 300 0");
-    pieChart.css("display", "block");
+        pieChart.attr('id', 'pieChart' + this.popUpCount)
+        pieChart.css("margin", "0 300 0");
+        pieChart.css("display", "block");
 
-    crossSVG.css("margin", "0 330 0");
-    crossSVG.css("display", "block");
+        crossSVG.css("margin", "0 330 0");
+        crossSVG.css("display", "block");
 
-    pinSVG.css("margin", "-5 0 0");
-    pinSVG.css("display", "block");
-    //---------------------\\
+        pinSVG.css("margin", "-5 0 0");
+        pinSVG.css("display", "block");
+        //---------------------\\
 
-    // When either svg is clicked then they perform their own functions
-    //---------------------\\
-    crossSVG.on("click", function(evt) {
-      popUp.remove();
-      this.popUpCount--;
-    })
+        // When either svg is clicked then they perform their own functions
+        //---------------------\\
+        crossSVG.on("click", function(evt) {
+          popUp.remove();
+          this.popUpCount--;
+        })
 
-    pinSVG.on("click", function(evt) {
-      if ($(this).hasClass('pinned')) {
-        popUp.remove();
-        this.popUpCount--;
+        pinSVG.on("click", function(evt) {
+          if ($(this).hasClass('pinned')) {
+            // popUp.remove();
+            // this.popUpCount--;
+          }
+          $(this).toggleClass("pinned");
+        })
+        //---------------------\\
+
+        // Append the DIV to the div found in the index file
+        // Displays it on the website
+        $('#popUpHolder').append(popUp);
+
+        // Makes the div draggable
+        dragElement(document.getElementById(popUp.attr('id')));
+
+        return this.popUpCount;
       }
-      $(this).toggleClass("pinned");
-    })
-    //---------------------\\
+    }
 
-    // Append the DIV to the div found in the index file
-    // Displays it on the website
-    $('#popUpHolder').append(popUp);
-
-    // Makes the div draggable
-    dragElement(document.getElementById(popUp.attr('id')));
-
-    return this.popUpCount;
-  }
-}
-
-  decades.forEach(function(decade) {
-    // //console.log(decade+" 5")
-    layers["Points"][decade] = {
-      cartocss: "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
-      sql: "SELECT * FROM latinos.comparisonmappoints where decade='" + decade + "'",
-      interactivity: 'name, properties, cartodb_id, options, captions'
-    };
-  });
+    decades.forEach(function(decade) {
+      // //console.log(decade+" 5")
+      layers["Points"][decade] = {
+        cartocss :
+            "#Points { marker-width: 15; marker-fill: #FFB927; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1; marker-line-opacity: 1; marker-placement: point; marker-type: ellipse;}",
+        sql : "SELECT * FROM comparisonmappoints where decade='" + decade + "'",
+        interactivity : 'youtube_id,name, cartodb_id, options, captions,yt_start'
+      };
+    });
